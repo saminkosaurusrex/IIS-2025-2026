@@ -1,0 +1,13 @@
+:root {
+  /* Farby */
+  --color-primary: #2B2D42;
+  --color-secondary: #8D99AE;
+  --color-mywhite: #EDF2F4;
+  --color-subred: #EF233C;
+  --color-myred: #D90429;
+
+
+  /* Fonty */
+  --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+
+}
