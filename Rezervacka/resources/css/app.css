@@ -91,13 +91,13 @@
 }
 
 :root {
-    --background: #EDF2F4;
-    --foreground: #2B2D42;
+    --background: #edf2f4;
+    --foreground: #2b2d42;
     --card: hsl(0 0% 100%);
     --card-foreground: hsl(0 0% 3.9%);
     --popover: hsl(0 0% 100%);
     --popover-foreground: hsl(0 0% 3.9%);
-    --primary: #2B2D42;
+    --primary: #2b2d42;
     --primary-foreground: hsl(0 0% 98%);
     --secondary: hsl(0 0% 92.1%);
     --secondary-foreground: hsl(0 0% 9%);
@@ -129,7 +129,7 @@
 
 .dark {
     --background: hsl(0 0% 3.9%);
-    --foreground: hsl(0 0% 98%);
+    --foreground: hsl(0, 13%, 19%);
     --card: hsl(0 0% 3.9%);
     --card-foreground: hsl(0 0% 98%);
     --popover: hsl(0 0% 3.9%);
@@ -172,10 +172,10 @@
     }
 }
 
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     background-color: var(--color-mywhite);
     color: var(--color-foreground);
 }
-
