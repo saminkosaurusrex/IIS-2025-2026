@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\ShowType;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +22,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Inertia::share([
+            'types' => function () {
+                return Cache::remember('showTypes', 60 * 60, function () {
+                    return ShowType::select('id', 'name')->get();
+                });
+            }
+        ]);
     }
 }
