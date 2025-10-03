@@ -1,109 +1,134 @@
 <template>
     <div class="app-layout flex">
-        <div class="main-content flex-1 flex flex-col">
+        <div class="main-content flex flex-1 flex-col">
             <NavMenu />
 
-            <div class="content p-4 text-black">
-                <h1>{{ event.show.name }} - {{ event.hall.name }}</h1>
+            <div class="content p-4">
+                <div class="grid grid-cols-2 gap-8">
+                    <!-- Ľavá strana - Rezervácia -->
+                    <ReservationSummary
+                        :show-name="event.show.name"
+                        :rating="event.show.rating"
+                        :age-rating="event.show.age_rating"
+                        :duration="event.show.duration"
+                        :subtitles="event.show.subtitles"
+                        :genres="event.show.genres"
+                        :location="event.hall.name"
+                        :date-time="formatDateTime(event.starting_at)"
+                        :available-seats="availableSeatsCount"
+                        :occupied-seats="occupiedSeatsCount"
+                        :adult-tickets="adultTickets"
+                        :discounted-tickets="discountedTickets"
+                        :total-price="totalPrice"
+                        :email="email"
+                        :terms-accepted="termsAccepted"
+                        :can-submit="canSubmit"
+                        @update-adult="adultTickets = $event"
+                        @update-discounted="discountedTickets = $event"
+                        @update-email="email = $event"
+                        @update-terms="termsAccepted = $event"
+                        @submit="handleSubmit"
+                    />
 
-                <!-- Hlavná mriežka sedadiel s číslami -->
-                <div class="flex">
-                    <!-- Čísla riadkov -->
-                    <div class="flex flex-col mr-1">
-                        <div class="h-10"></div> <!-- prázdny roh pre horný ľavý roh -->
-                        <div v-for="row in event.hall.rows" :key="'row-num-' + row"
-                             class="mb-2 w-10 h-10 flex items-center justify-center">
-                            {{ row }}
-                        </div>
-                    </div>
-
-                    <!-- Sedadlá a čísla stĺpcov -->
-                    <div>
-                        <!-- Čísla stĺpcov -->
-                        <div class="grid gap-2 "
-                             :style="`grid-template-columns: repeat(${event.hall.columns}, 40px)`">
-                            <div v-for="col in event.hall.columns" :key="'col-num-' + col"
-                                 class="w-10 h-10 flex items-center justify-center font-bold">
-                                {{ col }}
-                            </div>
-                        </div>
-
-                        <!-- Sedadlá -->
-                        <div
-                            v-for="row in event.hall.rows"
-                            :key="'row-' + row"
-                            class="grid gap-2"
-                            :style="`grid-template-columns: repeat(${event.hall.columns}, 40px)`"
-                        >
-                            <div
-                                v-for="col in event.hall.columns"
-                                :key="'seat-' + row + '-' + col"
-                                class="mb-2 w-10 h-10 flex items-center justify-center border rounded overflow-hidden"
-                                :class="isBooked(row, col) ? 'bg-red-500' : 'bg-gray-100'"
-                            >
-                                <img
-                                    src="/images/seat.png"
-                                    :alt="`Seat ${row}-${col}`"
-                                    class="w-full h-full object-cover"
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Pravá strana - Sedadlá -->
+                    <SeatingChart
+                        :rows="event.hall.rows"
+                        :columns="event.hall.columns"
+                        :reserved-seats="reservedSeats"
+                        :selected-seats="selectedSeats"
+                        @seat-click="handleSeatClick"
+                    />
                 </div>
-
             </div>
         </div>
     </div>
-
 </template>
 
 <script setup lang="ts">
-import NavMenu from '../components/NavBar.vue';
-import dayjs from 'dayjs';
+import ReservationSummary from '@/components/EventCard.vue';
+import NavMenu from '@/components/NavBar.vue';
+import SeatingChart from '@/components/SeatingChart.vue';
+import { computed, ref } from 'vue';
 
-interface ReservedSeat {
-    row: number;
-    column: number;
-}
-
-interface Hall {
-    id: number;
-    name: string;
-    rows: number;
-    columns: number;
-}
-
-interface Show {
-    id: number;
-    name: string;
-}
-
-interface Event {
-    id: number;
-    hall: Hall;
-    show: Show;
-    starting_at: string;
-    ending_at: string;
-    price: number;
-}
-
+// Props z backendu
 interface Props {
-    event: Event;
-    reservedSeats: ReservedSeat[];
+    event: {
+        show: {
+            name: string;
+            rating: string;
+            age_rating: string;
+            duration: number;
+            subtitles: string;
+            genres: string[];
+        };
+        hall: {
+            name: string;
+            rows: number;
+            columns: number;
+        };
+        starting_at: string;
+        price: number;
+    };
+    reservedSeats: Array<{ row: number; column: number }>;
 }
 
 const props = defineProps<Props>();
 
-const formatDateTime = (datetime: string) => dayjs(datetime).format('DD. MMM YYYY HH:mm')
+// Lokálny state
+const selectedSeats = ref<Array<{ row: number; column: number }>>([]);
+const adultTickets = ref(0);
+const discountedTickets = ref(0);
+const email = ref('');
+const termsAccepted = ref(false);
 
-// Funkcia na kontrolu, či je sedadlo obsadené rezerváciou
-const isBooked = (row: number, col: number): boolean => {
-    return props.reservedSeats.some(seat => seat.row === row && seat.column === col);
-}
+// Computed
+const totalSeats = computed(
+    () => props.event.hall.rows * props.event.hall.columns,
+);
+const occupiedSeatsCount = computed(() => props.reservedSeats.length);
+const availableSeatsCount = computed(
+    () => totalSeats.value - occupiedSeatsCount.value,
+);
+
+const totalPrice = computed(() => {
+    return (
+        adultTickets.value * props.event.price +
+        discountedTickets.value * (props.event.price * 0.8)
+    );
+});
+
+const canSubmit = computed(() => {
+    return (
+        email.value !== '' &&
+        termsAccepted.value &&
+        (adultTickets.value > 0 || discountedTickets.value > 0)
+    );
+});
+
+// Methods
+const handleSeatClick = (row: number, col: number) => {
+    const index = selectedSeats.value.findIndex(
+        (s) => s.row === row && s.column === col,
+    );
+    if (index > -1) {
+        selectedSeats.value.splice(index, 1);
+    } else {
+        selectedSeats.value.push({ row, column: col });
+    }
+};
+
+const formatDateTime = (datetime: string) => {
+    // Tvoja formátovacia logika
+    return datetime;
+};
+
+const handleSubmit = () => {
+    // Odoslanie rezervácie
+    console.log('Submitting reservation...', {
+        selectedSeats: selectedSeats.value,
+        adultTickets: adultTickets.value,
+        discountedTickets: discountedTickets.value,
+        email: email.value,
+    });
+};
 </script>
-
-<style scoped>
-.seat-grid {
-    display: grid;
-}
-</style>

@@ -9,16 +9,11 @@
 
             <!-- Obsah stránky -->
             <div class="content p-4"></div>
-
-            <ResCard />
-            <ResCard />
-            <ResCard />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import ResCard from '../components/EventCard.vue';
 import NavMenu from '../components/NavBar.vue';
 </script>
 

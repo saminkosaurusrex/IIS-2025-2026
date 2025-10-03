@@ -1,5 +1,128 @@
-<script setup lang="ts"></script>
+<template>
+    <div class="reservation-card">
+        <header class="header">
+            <div class="header-top">
+                <h1 class="name">{{ showName }}</h1>
+                <div class="score">{{ rating }}</div>
+            </div>
+            <div class="details">
+                <span>{{ ageRating }}</span>
+                <span>{{ duration }} min</span>
+                <span>{{ subtitles }}</span>
+            </div>
+            <div class="tags">
+                <span v-for="genre in genres" :key="genre">{{ genre }}</span>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="info-box">
+                <span>Kde:</span>
+                <span>{{ location }}</span>
+            </div>
+
+            <div class="info-box datetime">
+                <span>Kedy:</span>
+                <span>{{ dateTime }}</span>
+            </div>
+
+            <div class="seats">
+                <div class="seat">
+                    <div class="seat-box empty"></div>
+                    <span class="seat-count">{{ availableSeats }}</span>
+                    <span class="seat-label">Voľné</span>
+                </div>
+                <div class="seat">
+                    <div class="seat-box taken"></div>
+                    <span class="seat-count">{{ occupiedSeats }}</span>
+                    <span class="seat-label">Obsadené</span>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="tickets-section">
+                <div class="ticket-row">
+                    <span>Dospelý:</span>
+                    <NumberField
+                        :default-value="adultTickets"
+                        :min="0"
+                        @update:model-value="
+                            (val) => $emit('update-adult', val)
+                        "
+                    >
+                        <NumberFieldContent>
+                            <NumberFieldDecrement />
+                            <NumberFieldInput />
+                            <NumberFieldIncrement />
+                        </NumberFieldContent>
+                    </NumberField>
+                </div>
+                <div class="ticket-row">
+                    <span>Deti, ZTP, 60+:</span>
+                    <NumberField
+                        :default-value="discountedTickets"
+                        :min="0"
+                        @update:model-value="
+                            (val) => $emit('update-discounted', val)
+                        "
+                    >
+                        <NumberFieldContent>
+                            <NumberFieldDecrement />
+                            <NumberFieldInput />
+                            <NumberFieldIncrement />
+                        </NumberFieldContent>
+                    </NumberField>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="sum">
+                <span>Spolu:</span>
+                <span>{{ totalPrice.toFixed(2) }} €</span>
+            </div>
+
+            <hr />
+
+            <div class="email">
+                <span class="email-label">Email:</span>
+                <div class="email-input">
+                    <input
+                        type="email"
+                        :value="email"
+                        @input="
+                            $emit(
+                                'update-email',
+                                ($event.target as HTMLInputElement).value,
+                            )
+                        "
+                        class="w-full rounded-md border-2 border-gray-300 p-3 text-gray-900"
+                    />
+                </div>
+            </div>
+
+            <div class="checkbox-wrapper">
+                <Checkbox
+                    :checked="termsAccepted"
+                    @update:checked="$emit('update-terms', $event)"
+                />
+                <label>Podmienky</label>
+            </div>
+
+            <button
+                class="reserve-button"
+                :disabled="true"
+                @click="$emit('submit')"
+            >
+                Zaplatiť
+            </button>
+        </div>
+    </div>
+</template>
+
 <script setup lang="ts">
+import { Checkbox } from '@/components/ui/checkbox';
 import {
     NumberField,
     NumberFieldContent,
@@ -7,108 +130,37 @@ import {
     NumberFieldIncrement,
     NumberFieldInput,
 } from '@/components/ui/number-field';
-//import { Link } from '@inertiajs/vue3';
-import { Checkbox } from '@/components/ui/checkbox';
+
+interface Props {
+    showName: string;
+    rating: string;
+    ageRating: string;
+    duration: number;
+    subtitles: string;
+    genres: string[];
+    location: string;
+    dateTime: string;
+    availableSeats: number;
+    occupiedSeats: number;
+    adultTickets: number;
+    discountedTickets: number;
+    totalPrice: number;
+    email: string;
+    termsAccepted: boolean;
+    canSubmit: boolean;
+}
+
+interface Emits {
+    (e: 'update-adult', value: number): void;
+    (e: 'update-discounted', value: number): void;
+    (e: 'update-email', value: string): void;
+    (e: 'update-terms', value: boolean): void;
+    (e: 'submit'): void;
+}
+
+defineProps<Props>();
+defineEmits<Emits>();
 </script>
-
-<template>
-    <div class="reservation-page">
-        <div class="reservation-card">
-            <header class="header">
-                <div class="header-top">
-                    <h1 class="name">Oppenheimer</h1>
-                    <div class="score">00:00</div>
-                </div>
-                <div class="details">
-                    <span>15+</span>
-                    <span>222 min</span>
-                    <span>SK titulky</span>
-                </div>
-                <div class="tags">
-                    <span>Drama</span>
-                    <span>Action</span>
-                    <span>Comedy</span>
-                </div>
-            </header>
-
-            <div class="content">
-                <div class="info-box">
-                    <span>Kde:</span>
-                    <span>Cinemax Košice OC Optima</span>
-                </div>
-
-                <div class="info-box datetime">
-                    <span>Kedy:</span>
-                    <span>19.09.2025 18:30</span>
-                </div>
-
-                <div class="seats">
-                    <div class="seat">
-                        <div class="seat-box empty"></div>
-                        <span class="seat-count">4</span>
-                        <span class="seat-label">Voľné</span>
-                    </div>
-                    <div class="seat">
-                        <div class="seat-box taken"></div>
-                        <span class="seat-count">5</span>
-                        <span class="seat-label">Obsadené</span>
-                    </div>
-                </div>
-
-                <hr />
-
-                <div class="tickets-section">
-                    <div class="ticket-row">
-                        <span>Dospelý:</span>
-                        <NumberField id="adult" :default-value="18" :min="0">
-                            <NumberFieldContent>
-                                <NumberFieldDecrement />
-                                <NumberFieldInput />
-                                <NumberFieldIncrement />
-                            </NumberFieldContent>
-                        </NumberField>
-                    </div>
-                    <div class="ticket-row">
-                        <span>Deti, ZTP, 60+:</span>
-                        <NumberField id="children" :default-value="18" :min="0">
-                            <NumberFieldContent>
-                                <NumberFieldDecrement />
-                                <NumberFieldInput />
-                                <NumberFieldIncrement />
-                            </NumberFieldContent>
-                        </NumberField>
-                    </div>
-                </div>
-
-                <hr />
-
-                <div class="sum">
-                    <span>Spolu:</span>
-                    <span>15.80 €</span>
-                </div>
-
-                <hr />
-                <div class="email">
-                    <span class="email-label">Email:</span>
-                    <div class="email-input">
-                        <input
-                            id="input-email"
-                            type="text"
-                            class="w-full rounded-md border-2 border-gray-300 p-3 text-gray-900"
-                        />
-                    </div>
-                </div>
-
-                <div class="checkbox-wrapper">
-                    <Checkbox id="terms" />
-                    <label for="terms">Podmienky</label>
-                </div>
-
-                <button class="reserve-button">Zaplatiť</button>
-            </div>
-        </div>
-    </div>
-</template>
 
 <style scoped>
 .reservation-page {
@@ -119,7 +171,6 @@ import { Checkbox } from '@/components/ui/checkbox';
     align-items: center;
     justify-content: center;
 }
-
 .reservation-card {
     max-width: 700px;
     width: 100%;
@@ -130,8 +181,15 @@ import { Checkbox } from '@/components/ui/checkbox';
         0 10px 10px -5px rgba(0, 0, 0, 0.04);
     overflow: hidden;
 }
+.reservation-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    padding: 3rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-/* Header */
 .header {
     background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
     padding: 2rem;
