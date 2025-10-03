@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\EventController;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HallController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ShowController;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use App\Http\Controllers\EventController;
 
 // public routes (accessible for both registered and unregistered user)
 
@@ -28,7 +29,7 @@ Route::group(['middleware' => ['auth', 'role:cashier'],],function (){
 
 // routes only for editor
 Route::group(['middleware' => ['auth', 'role:editor'],],function (){
-
+    Route::get('/halls', [HallController::class, 'show']);
 });
 
 

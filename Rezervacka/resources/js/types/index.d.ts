@@ -13,6 +13,7 @@ export interface BreadcrumbItem {
 export interface NavItem {
     title: string;
     href: NonNullable<InertiaLinkProps['href']>;
+    roles?: ('admin' | 'editor' | 'user' | 'cashier')[]
     icon?: LucideIcon;
     isActive?: boolean;
 }
