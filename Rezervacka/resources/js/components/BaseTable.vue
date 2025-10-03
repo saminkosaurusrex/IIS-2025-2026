@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps} from 'vue';
+import { defineProps } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import Button from '@/components/ui/button/Button.vue';
 import { Head, Link, } from '@inertiajs/vue3';
@@ -20,7 +20,7 @@ interface Name {
     link: string
 }
 
-interface TableHeaderValues{
+interface TableHeaderValues {
     id: number,
     name: string,
     description: string,
@@ -29,7 +29,7 @@ interface TableHeaderValues{
     columns: number
 }
 
-interface TableValues{
+interface TableValues {
     id: number,
     name: string,
     description: string,
@@ -38,9 +38,9 @@ interface TableValues{
     columns: number
 }
 interface Props {
-  tableHeader: string[];       // názvy stĺpcov
-  tableValues: TableValues[];  // riadky
-  nameProps: Name;             // názov, zmena názvu, link
+    tableHeader: string[];       // názvy stĺpcov
+    tableValues: TableValues[];  // riadky
+    nameProps: Name;             // názov, zmena názvu, link
 }
 
 const props = defineProps<Props>();
@@ -73,16 +73,18 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <TableBody>
                         <TableRow v-for="tValue in props.tableValues">
                             <TableCell>{{ tValue.id }}</TableCell>
-                            <TableCell class="font-medium">{{ tValue.name}}</TableCell>
-                            <TableCell class="overflow-x-auto max-w-xs whitespace-nowrap">{{ tValue.description }}</TableCell>
-                            <TableCell class="overflow-x-auto max-w-xs whitespace-nowrap">{{ tValue.address }}</TableCell>
+                            <TableCell class="font-medium">{{ tValue.name }}</TableCell>
+                            <TableCell class="overflow-x-auto max-w-xs whitespace-nowrap">{{ tValue.description }}
+                            </TableCell>
+                            <TableCell class="overflow-x-auto max-w-xs whitespace-nowrap">{{ tValue.address }}
+                            </TableCell>
                             <TableCell>{{ tValue.rows }}</TableCell>
                             <TableCell>{{ tValue.columns }}</TableCell>
                             <TableCell class="text-center space-x-2">
                                 <Link :href="`/halls/${tValue.id}/edit`">
                                 <Button class="bg-slate-600">Edit</Button>
                                 </Link>
-                                 <Button class="bg-red-600">Delete</Button>
+                                <Button class="bg-red-600">Delete</Button>
                             </TableCell>
                         </TableRow>
                     </TableBody>
