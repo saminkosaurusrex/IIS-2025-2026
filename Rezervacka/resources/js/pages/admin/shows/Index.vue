@@ -8,7 +8,7 @@ interface Name {
 }
 
 // Lokálne dáta
-const tableHeader: string[] = ['Id', 'Meno', 'Typ', 'Žáner','Obrázok'];
+const tableHeader: string[] = ['Id', 'Meno', 'Typ', 'Žáner', 'Účinkujúci','Obrázok'];
 
 interface Props {
     // musi sa to volat rovnako ako to co ide do compact
