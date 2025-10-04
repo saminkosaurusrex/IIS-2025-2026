@@ -2,8 +2,10 @@
 import { defineProps } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import Button from '@/components/ui/button/Button.vue';
-import { Head, Link, } from '@inertiajs/vue3';
+import { Head, Link, router, usePage} from '@inertiajs/vue3';
 import { type BreadcrumbItem } from '@/types';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert/';
+import { Rocket } from 'lucide-vue-next';
 import {
     Table,
     TableBody,
@@ -46,6 +48,8 @@ interface Props {
     nameProps: Name;             // názov, zmena názvu, link
 }
 
+const page = usePage();
+
 const props = defineProps<Props>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -55,6 +59,12 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+const deleteHandle = (id: number) => {
+    if(confirm('Chceš vymazať záynam ' + props.tableValues.find(u => u.id === id)?.name + '?')){
+        router.delete(`${props.nameProps.link}/${id}`);
+    }
+};
+
 </script>
 <template>
 
@@ -62,6 +72,15 @@ const breadcrumbs: BreadcrumbItem[] = [
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-4">
+            <div v-if="page.props.flash?.success" class="mb-4">
+                <Alert>
+                    <Rocket class="h-4 w-4" />
+                    <AlertTitle>Notifikácia!</AlertTitle>
+                    <AlertDescription>
+                        {{ page.props.flash.success }}
+                    </AlertDescription>
+                </Alert>
+            </div>
             <Link :href="`${props.nameProps.link}/create`"><Button>Vytvoriť {{ props.nameProps.changeName }}</Button>
             </Link>
             <div>
@@ -126,9 +145,9 @@ const breadcrumbs: BreadcrumbItem[] = [
                             <TableCell v-if="tValue.columns">{{ tValue.columns }}</TableCell>
                             <TableCell class="text-center space-x-2">
                                 <Link :href="`${props.nameProps.link}/${tValue.id}/edit`">
-                                <Button class="bg-slate-600">Edit</Button>
+                                <Button class="bg-slate-600">Upraviť</Button>
                                 </Link>
-                                <Button class="bg-red-600">Delete</Button>
+                                <Button @click="deleteHandle(tValue.id)" class="bg-red-600">Vymazať</Button>
                             </TableCell>
                         </TableRow>
                     </TableBody>

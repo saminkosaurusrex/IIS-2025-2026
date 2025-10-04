@@ -9,6 +9,13 @@ class Hall extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'address',
+        'description',
+        'rows',
+        'columns',
+    ];
 
     public function events()
     {
