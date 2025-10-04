@@ -20,22 +20,25 @@ interface Name {
     link: string
 }
 
-interface TableHeaderValues {
-    id: number,
-    name: string,
-    description: string,
-    address: string,
-    rows: number,
-    columns: number
-}
-
 interface TableValues {
     id: number,
-    name: string,
-    description: string,
-    address: string,
-    rows: number,
-    columns: number
+    name?: string,
+    access_code?: string,
+    hallName?: string,
+    showName?: string,
+    starting_at?: string,
+    ending_at?: string,
+    price?: number,
+    email?: string,
+    role?: string,
+    description?: string,
+    type?: string,
+    address?: string,
+    image?: string,
+    rows?: number,
+    columns?: number
+    tags?: string
+    performers?: string[]
 }
 interface Props {
     tableHeader: string[];       // názvy stĺpcov
@@ -59,7 +62,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-4">
-            <Link :href="`/halls/create`"><Button>Vytvoriť {{ props.nameProps.changeName }}</Button></Link>
+            <Link :href="`${props.nameProps.link}/create`"><Button>Vytvoriť {{ props.nameProps.changeName }}</Button>
+            </Link>
             <div>
                 <Table>
                     <TableHeader>
@@ -70,18 +74,58 @@ const breadcrumbs: BreadcrumbItem[] = [
                             <TableHead class="text-center">Činnosti</TableHead>
                         </TableRow>
                     </TableHeader>
-                    <TableBody>
-                        <TableRow v-for="tValue in props.tableValues">
+                    <TableBody class="relative">
+                        <TableRow v-for="tValue in props.tableValues" :key="tValue.id">
                             <TableCell>{{ tValue.id }}</TableCell>
-                            <TableCell class="font-medium">{{ tValue.name }}</TableCell>
-                            <TableCell class="overflow-x-auto max-w-xs whitespace-nowrap">{{ tValue.description }}
+                            <TableCell v-if="tValue.name" class="font-medium">{{ tValue.name }}</TableCell>
+                            <TableCell v-if="tValue.email">{{ tValue.email }}</TableCell>
+                            <TableCell v-if="tValue.access_code" class="font-medium">Skrytý</TableCell>
+                            <TableCell v-if="tValue.hallName" class="font-medium">{{ tValue.hallName }}</TableCell>
+                            <TableCell v-if="tValue.showName" class="font-medium">{{ tValue.showName }}</TableCell>
+                            <TableCell v-if="tValue.description" class="overflow-x-auto max-w-xs whitespace-nowrap">{{
+                                tValue.description }}
                             </TableCell>
-                            <TableCell class="overflow-x-auto max-w-xs whitespace-nowrap">{{ tValue.address }}
+                            <TableCell v-if="tValue.address" class="overflow-x-auto max-w-xs whitespace-nowrap">{{
+                                tValue.address }}
                             </TableCell>
-                            <TableCell>{{ tValue.rows }}</TableCell>
-                            <TableCell>{{ tValue.columns }}</TableCell>
+                            <TableCell v-if="tValue.type">{{ tValue.type }}</TableCell>
+                            <TableCell v-if="tValue.starting_at">{{ tValue.starting_at }}</TableCell>
+                            <TableCell v-if="tValue.ending_at">{{ tValue.ending_at }}</TableCell>
+                            <TableCell v-if="tValue.price">{{ tValue.price }} €</TableCell>
+                            <TableCell v-if="tValue.tags">{{ tValue.tags }} </TableCell>
+                            <TableCell v-if="tValue.role">{{ tValue.role }}</TableCell>
+                            <TableCell v-if="tValue.performers" class="relative group">
+                                <span class="underline cursor-pointer">Zobraziť účinkujúcich</span>
+
+                                <!-- Hover list -->
+                                <div
+                                    class="fixed inset-0 flex items-center justify-center bg-black/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 pointer-events-none">
+                                    <ul class="pointer-events-none bg-white text-black p-3 m-3 rounded shadow">
+                                        <li v-for="performer in tValue.performers" :key="performer"
+                                            >
+                                            {{ performer }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </TableCell>
+                            <TableCell v-if="tValue.image">
+                                <div class="group">
+                                    <!-- Miniaturka -->
+                                    <img :src="tValue.image" alt="Image"
+                                        class="h-12 w-12 object-cover rounded cursor-pointer" />
+
+                                    <!-- Zväčšený obrázok cez celú tabuľku -->
+                                    <div
+                                        class="fixed inset-0 flex items-center justify-center bg-black/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 pointer-events-none">
+                                        <img :src="tValue.image" alt="Image"
+                                            class="max-w-2xl max-h-[80vh] object-contain rounded-lg shadow-2xl" />
+                                    </div>
+                                </div>
+                            </TableCell>
+                            <TableCell v-if="tValue.rows">{{ tValue.rows }}</TableCell>
+                            <TableCell v-if="tValue.columns">{{ tValue.columns }}</TableCell>
                             <TableCell class="text-center space-x-2">
-                                <Link :href="`/halls/${tValue.id}/edit`">
+                                <Link :href="`${props.nameProps.link}/${tValue.id}/edit`">
                                 <Button class="bg-slate-600">Edit</Button>
                                 </Link>
                                 <Button class="bg-red-600">Delete</Button>

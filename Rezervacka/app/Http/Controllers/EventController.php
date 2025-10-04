@@ -20,4 +20,16 @@ class EventController extends Controller
         ]);
 
     }
+
+    public function index(){
+        $events = Event::with(['hall', 'show'])->get();
+        $events->map(function ($event){
+            $event->hallName = $event->hall->name;
+            $event->showName = $event->show->name;
+            return $event;
+        });
+        return Inertia::render('admin/events/Index',[
+            'events' => $events
+        ]);
+    }
 }

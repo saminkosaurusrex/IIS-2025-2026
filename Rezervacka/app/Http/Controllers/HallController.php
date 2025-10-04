@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class HallController extends Controller
 {
-    public function show(){
+    public function index(){
         $halls = Hall::oldest()->get();
         return Inertia::render('admin/halls/Index', compact('halls'));
     }

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import BaseTable from '@/components/BaseTable.vue';
 
-
 interface Name {
     name: string;
     changeName: string;
@@ -9,21 +8,21 @@ interface Name {
 }
 
 // Lokálne dáta
-const tableHeader: string[] = ['Id', 'Meno', 'Popis', 'Adresa', 'Riadky', 'Stĺpce'];
+const tableHeader: string[] = ['Id', 'Meno', 'Typ', 'Žáner','Obrázok'];
 
 interface Props {
     // musi sa to volat rovnako ako to co ide do compact
-    halls: [];
+    shows: [];
 }
 
 const props = defineProps<Props>();
-console.log(props.halls);
-const tableValues = props.halls;
+console.log(props.shows);
+const tableValues = props.shows;
 
 const nameProps: Name = {
-    name: 'Sály',
-    changeName: 'sálu',
-    link: '/halls',
+    name: 'Predstavenia',
+    changeName: 'predstavenie',
+    link: '/shows',
 };
 
 </script>

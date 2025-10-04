@@ -9,21 +9,21 @@ interface Name {
 }
 
 // Lokálne dáta
-const tableHeader: string[] = ['Id', 'Meno', 'Popis', 'Adresa', 'Riadky', 'Stĺpce'];
+const tableHeader: string[] = ['Id', 'Meno', 'E-mail', 'Kód prístupu', 'Sála', 'Predstavenie', 'Začiatok','Cena'];
 
 interface Props {
     // musi sa to volat rovnako ako to co ide do compact
-    halls: [];
+    reservations: [];
 }
 
 const props = defineProps<Props>();
-console.log(props.halls);
-const tableValues = props.halls;
+console.log(props.reservations);
+const tableValues = props.reservations;
 
 const nameProps: Name = {
-    name: 'Sály',
-    changeName: 'sálu',
-    link: '/halls',
+    name: 'Rezervácie',
+    changeName: 'rezerváciu',
+    link: '/reservations',
 };
 
 </script>
