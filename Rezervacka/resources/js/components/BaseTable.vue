@@ -141,6 +141,11 @@ const deleteHandle = (id: number) => {
                                     </div>
                                 </div>
                             </TableCell>
+                            <TableCell v-else>
+                                <div class="group center">
+                                    Bez obrázku
+                                </div>
+                            </TableCell>
                             <TableCell v-if="tValue.rows">{{ tValue.rows }}</TableCell>
                             <TableCell v-if="tValue.columns">{{ tValue.columns }}</TableCell>
                             <TableCell class="text-center space-x-2">

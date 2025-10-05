@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Show extends Model
 {
 
+    protected $fillable = [
+        'name',
+        'show_type_id',
+        'image',
+    ];
 
     public function show_type()
     {

@@ -81,7 +81,7 @@ const toggleRole = (role: Role): void => {
                             @click="toggleRole('user')"> Používateľ
                         </Button>
                     </div>
-                    <div class="text-sm text-red-600" v-if="form.errors.role">{{ form.errors.email }}
+                    <div class="text-sm text-red-600" v-if="form.errors.role">{{ form.errors.role }}
                     </div>
                 </div>
 

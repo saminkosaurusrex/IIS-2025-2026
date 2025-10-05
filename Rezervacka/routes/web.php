@@ -45,7 +45,7 @@ Route::group(['middleware' => ['auth', 'role:editor'],],function (){
     // routes for performers
     Route::resource('performers', PerformerController::class)->except(['show']); // done
     // routes for shows
-    Route::resource('shows', ShowController::class)->except(['show']);
+    Route::resource('shows', ShowController::class)->except(['show']); // done
     // routes for events
     Route::resource('events', EventController::class)->except(['show']);
     // routes for reservations
