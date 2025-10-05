@@ -8,9 +8,9 @@ import BaseEditCreate from '@/components/BaseEditCreate.vue';
         :name-props="{
             action: 'Vytvorenie',
             changeActionName: 'Vytvoriť',
-            name: 'Typy predstavení',
-            changeName: 'typ predstavenia',
-            link: 'show_types/',
+            name: 'Účinkujúci',
+            changeName: 'účinkujúceho',
+            link: 'performers/',
             actionLink: 'create'
         }" 
     />

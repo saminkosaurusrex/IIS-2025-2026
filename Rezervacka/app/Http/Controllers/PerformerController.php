@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
 use App\Models\Performer;
-use Illuminate\Http\Request;
 
-class PerformerController extends Controller
+class PerformerController extends CrudController
 {
-    public function index(){
-        $performers = Performer::all();
-        return Inertia::render('admin/performers/Index', compact('performers'));
-    }
+    protected $modelClass = Performer::class;
+    protected $viewPath = 'performers';
+    protected $returnMessage = 'Účinkujúci';
+    
 }
 

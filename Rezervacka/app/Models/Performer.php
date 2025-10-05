@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Performer extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+    ];
+
     public function shows() {
         return $this->belongsToMany(Show::class);
     }

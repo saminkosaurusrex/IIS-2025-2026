@@ -24,12 +24,8 @@ Route::get('dashboard', function () {
 
 // routes only for admin
 Route::group(['middleware' => ['auth', 'role:admin'],],function (){
-    Route::get('/users', [UserController::class, 'index']); // done
-    Route::get('/users/create', [UserController::class, 'create']);
-    Route::post('/users', [UserController::class, 'store']);
-    Route::get('/users/{user}/edit', [UserController::class, 'edit']);
-    Route::put('/users/{user}', [UserController::class, 'update']);
-    Route::delete('/users/{user}', [UserController::class, 'destroy']);
+    // routes for users
+    Route::resource('users', UserController::class)->except(['show']);
 });
 
 // routes only for cashier
@@ -39,26 +35,21 @@ Route::group(['middleware' => ['auth', 'role:cashier'],],function (){
 
 // routes only for editor
 Route::group(['middleware' => ['auth', 'role:editor'],],function (){
-    Route::get('/halls', [HallController::class, 'index']); // done
-    Route::get('/shows', [ShowController::class, 'index']);
-    Route::get('/events', [EventController::class, 'index']);
-    Route::get('/show_types', [ShowTypesController::class, 'index']); // done
-    Route::get('/tags', [TagController::class, 'index']);
-    Route::get('/performers', [PerformerController::class, 'index']);
-    Route::get('/reservations', [ReservationController::class, 'index']);
-
-    Route::get('/halls/create', [HallController::class, 'create']);
-    Route::post('/halls', [HallController::class, 'store']);
-    Route::get('/halls/{hall}/edit', [HallController::class, 'edit']);
-    Route::put('/halls/{hall}', [HallController::class, 'update']);
-    Route::delete('/halls/{hall}', [HallController::class, 'destroy']);
-
-    Route::get('/show_types/create', [ShowTypesController::class, 'create']);
-    Route::post('/show_types', [ShowTypesController::class, 'store']);
-    Route::get('/show_types/{show_type}/edit', [ShowTypesController::class, 'edit']);
-    Route::put('/show_types/{show_type}', [ShowTypesController::class, 'update']);
-    Route::delete('/show_types/{show_type}', [ShowTypesController::class, 'destroy']);
-
+    
+    // routes for halls
+    Route::resource('halls', HallController::class)->except(['show']); // done
+    // routes for show types
+    Route::resource('show_types', ShowTypesController::class)->except(['show']); // done
+    // routes for tags
+    Route::resource('tags', TagController::class)->except(['show']); // done
+    // routes for performers
+    Route::resource('performers', PerformerController::class)->except(['show']); // done
+    // routes for shows
+    Route::resource('shows', ShowController::class)->except(['show']);
+    // routes for events
+    Route::resource('events', EventController::class)->except(['show']);
+    // routes for reservations
+    Route::resource('reservations', ReservationController::class)->except(['show']);
 
 });
 

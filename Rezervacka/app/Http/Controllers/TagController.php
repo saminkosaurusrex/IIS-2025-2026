@@ -6,10 +6,10 @@ use App\Models\Tag;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 
-class TagController extends Controller
+class TagController extends CrudController
 {
-    public function index(){
-        $tags = Tag::all();
-        return Inertia::render('admin/tags/Index', compact('tags'));
-    }
+    protected $modelClass = Tag::class;
+    protected $viewPath = 'tags';
+    protected $returnMessage = 'Žáner';
+    
 }
