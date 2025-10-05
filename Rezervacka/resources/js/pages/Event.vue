@@ -1,11 +1,15 @@
 <template>
-    <div class="app-layout flex min-h-screen flex-col">
-        <NavMenu />
+    <div class="app-layout flex">
+        <!-- Sidebar vľavo -->
 
-        <!-- Hlavná časť -->
-        <div class="flex flex-1 bg-gray-100">
-            <!-- Ľavá polovica -->
-            <div class="flex w-1/2 items-center justify-center p-6">
+        <!-- Hlavná časť stránky -->
+        <div class="main-content flex flex-1 flex-col">
+            <!-- TopBar hore -->
+            <NavMenu />
+
+            <!-- Obsah stránky -->
+            <div class="content flex flex-col gap-4 p-4 lg:flex-row">
+                <!-- Seating chart -->
                 <ReservationSummary
                     class="w-full max-w-md"
                     :show-name="event.show.name"
@@ -30,10 +34,7 @@
                     @update-terms="termsAccepted = $event"
                     @submit="handleSubmit"
                 />
-            </div>
 
-            <!-- Pravá polovica -->
-            <div class="flex w-1/2 items-center justify-center p-6">
                 <SeatingChart
                     :rows="event.hall.rows"
                     :columns="event.hall.columns"
@@ -134,3 +135,10 @@ const handleSubmit = () => {
     });
 };
 </script>
+
+<style>
+.content {
+    height: 94vh;
+    gap: 1rem;
+}
+</style>
