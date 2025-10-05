@@ -141,7 +141,7 @@ const deleteHandle = (id: number) => {
                                     </div>
                                 </div>
                             </TableCell>
-                            <TableCell v-else>
+                            <TableCell v-else-if="!tValue.image && props.nameProps.name === 'Predstavenia'">
                                 <div class="group center">
                                     Bez obrázku
                                 </div>

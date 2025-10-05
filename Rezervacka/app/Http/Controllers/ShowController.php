@@ -103,6 +103,13 @@ class ShowController extends Controller
         } else {
             $validated['image'] = $show->image;
         }
+        if ($request->input('delete_image') == 1) {
+            if ($show->image) {
+                $path = str_replace('/storage/', '', $show->image);
+                Storage::disk('public')->delete($path);
+            }
+            $validated['image'] = null;
+        }
 
         $show->update([
             'name' => $validated['name'],

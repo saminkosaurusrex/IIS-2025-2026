@@ -38,13 +38,14 @@ const form = useForm({
     tags: props.show.tags.map(tag => tag.id),
     performers: props.show.performers.map(performer => performer.id),
     image: null as File | null,
+    delete_image: false,
     _method: 'PUT'
 });
 
 const handleSubmit = () => {
     console.log(form);
     form.post(`/shows/${props.show.id}`, {
-        forceFormData: true, 
+        forceFormData: true,
         preserveScroll: true,
     });
 };
@@ -68,6 +69,9 @@ const togglePerformers = (performer: number) => {
     }
 };
 
+const removeImage = () => {
+    form.delete_image = true;
+};
 
 const selectType = (type: number) => {
     form.show_types = type;
@@ -121,9 +125,10 @@ const selectType = (type: number) => {
                 </div>
                 <div class="space-y-2">
                     <Label for="image">Obrázok</Label>
-                    <div class="group">
+                    <div v-if="props.show.image != null" class="group">
                         <!-- Miniaturka -->
-                        <img :src="props.show.image" alt="Image" class="h-12 w-12 object-cover rounded cursor-pointer" />
+                        <img :src="props.show.image" alt="Image"
+                            class="h-12 w-12 object-cover rounded cursor-pointer" />
 
                         <!-- Zväčšený obrázok cez celú tabuľku -->
                         <div
@@ -131,8 +136,12 @@ const selectType = (type: number) => {
                             <img :src="props.show.image" alt="Image"
                                 class="max-w-2xl max-h-[80vh] object-contain rounded-lg shadow-2xl" />
                         </div>
+                        
                     </div>
-                    <Input id="image" type="file" accept="image/*" @change="e => form.image = e.target.files[0]" />
+                    <Button v-if="!form.delete_image && props.show.image" type="button" variant="destructive" size="sm" class="mt-2" @click="removeImage">
+                            Odstrániť obrázok
+                        </Button>
+                    <Input v-else id="image" type="file" accept="image/*" @change="e => form.image = e.target.files[0]" />
 
                     <div class="text-sm text-red-600" v-if="form.errors.image">
                         {{ form.errors.image }}
