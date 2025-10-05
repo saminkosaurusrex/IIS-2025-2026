@@ -163,51 +163,40 @@ defineEmits<Emits>();
 </script>
 
 <style scoped>
-.reservation-page {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-    padding: 3rem 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 .reservation-card {
-    max-width: 700px;
     width: 100%;
-    background-color: white;
-    border-radius: 1.5rem;
+    max-width: 600px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 1rem;
     box-shadow:
         0 20px 25px -5px rgba(0, 0, 0, 0.1),
         0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    overflow: hidden;
-}
-.reservation-page {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-    padding: 3rem 1rem;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+    align-items: stretch;
+    min-height: 85vh;
 }
 
+/* HEADER */
 .header {
     background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-    padding: 2rem;
+    padding: 1.5rem;
     color: white;
-    position: relative;
 }
 
 .header-top {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .name {
-    font-size: 2.5rem;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
     font-weight: 700;
-    margin: 0;
     line-height: 1.2;
 }
 
@@ -217,188 +206,131 @@ defineEmits<Emits>();
     padding: 0.5rem 1rem;
     border-radius: 0.75rem;
     font-weight: 700;
-    font-size: 1.25rem;
+    font-size: clamp(1rem, 3vw, 1.25rem);
 }
 
 .details {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.details span:first-child {
-    background-color: #dc2626;
-    padding: 0.25rem 0.75rem;
-    border-radius: 0.5rem;
-    font-weight: 700;
-    font-size: 0.875rem;
-}
-
-.details span:nth-child(2) {
-    font-weight: 600;
-    font-size: 0.875rem;
-}
-
-.details span:nth-child(3) {
-    color: #d1d5db;
-    font-size: 0.875rem;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    font-size: clamp(0.8rem, 2.5vw, 0.9rem);
 }
 
 .tags {
     display: flex;
-    gap: 0.5rem;
     flex-wrap: wrap;
+    gap: 0.4rem;
 }
 
 .tags span {
     background-color: #374151;
-    padding: 0.5rem 1rem;
+    padding: 0.4rem 0.8rem;
     border-radius: 9999px;
-    font-size: 0.875rem;
+    font-size: clamp(0.75rem, 2vw, 0.875rem);
 }
 
-/* Content */
+/* CONTENT */
 .content {
-    padding: 2rem;
+    padding: 1.5rem;
 }
 
 .info-box {
     background-color: #dc2626;
     color: white;
     border-radius: 1rem;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.info-box span:first-child {
-    font-size: 1.125rem;
-    opacity: 0.9;
-}
-
-.info-box span:last-child {
-    font-size: 1.25rem;
-    font-weight: 700;
-}
-
-.info-box.datetime span:last-child {
-    font-size: 1.5rem;
-}
-
-/* Seats */
-.seats {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4rem;
-    padding: 2rem 0;
+    padding: 1rem 1.25rem;
     margin-bottom: 1rem;
-}
-
-.seat {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     gap: 0.5rem;
 }
 
+.info-box span:first-child {
+    font-size: clamp(1rem, 3vw, 1.125rem);
+}
+
+.info-box span:last-child {
+    font-size: clamp(1.25rem, 4vw, 1.5rem);
+    font-weight: 700;
+}
+
+/* SEATS */
+.seats {
+    display: flex;
+    justify-content: center;
+    gap: clamp(1.5rem, 6vw, 4rem);
+    padding: 1.5rem 0;
+    flex-wrap: wrap;
+}
+
 .seat-box {
-    width: 64px;
-    height: 64px;
+    width: clamp(48px, 10vw, 64px);
+    height: clamp(48px, 10vw, 64px);
     border-radius: 0.5rem;
 }
 
 .seat-box.empty {
     background-color: #d1d5db;
 }
-
 .seat-box.taken {
     background-color: #dc2626;
 }
 
 .seat-count {
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 3.5vw, 1.5rem);
     font-weight: 700;
-    color: #111827;
 }
 
-.seat-label {
-    font-size: 0.875rem;
-    color: #6b7280;
-}
-
-/* Divider */
-hr {
-    border: none;
-    border-top: 1px solid #e5e7eb;
-    margin: 1.5rem 0;
-}
-
-/* Tickets */
-.tickets-section {
-    padding: 0.5rem 0;
-}
-
-.ticket-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem 0;
-    font-size: 1.25rem;
-}
-
-.ticket-row span:first-child {
-    font-weight: 600;
-    color: #111827;
-}
-
-.ticket-row .count {
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: #111827;
-}
-
-/* Sum */
+/* SUM */
 .sum {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     padding: 0.5rem 0;
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
     font-weight: 700;
-    color: #111827;
 }
 
-.sum span:last-child {
-    font-size: 1.75rem;
+/* EMAIL */
+.email {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1em;
 }
 
-/* Checkbox */
+@media (min-width: 480px) {
+    .email {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+.email-label {
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    font-weight: 700;
+}
+
+/* CHECKBOX */
 .checkbox-wrapper {
     display: flex;
     align-items: start;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
+    font-size: clamp(0.8rem, 2.5vw, 0.9rem);
 }
 
-.checkbox-wrapper label {
-    font-size: 0.875rem;
-    color: #6b7280;
-    line-height: 1.5;
-    cursor: pointer;
-}
-
-/* Button */
+/* BUTTON */
 .reserve-button {
     width: 100%;
     background-color: #2d3748;
     color: white;
     padding: 1rem 2rem;
     border-radius: 1rem;
-    font-size: 1.25rem;
+    font-size: clamp(1rem, 3.5vw, 1.25rem);
     font-weight: 700;
     text-align: center;
     border: none;
@@ -410,23 +342,30 @@ hr {
     background-color: #1a202c;
 }
 
-.email {
-    display: flex;
-    align-items: center;
-    gap: 1rem; /* medzera medzi label a input */
-    margin-bottom: 1em;
-}
+/* SMALLER SCREENS */
+@media (max-width: 480px) {
+    .content {
+        padding: 1rem;
+    }
 
-.email-label {
-    flex-shrink: 0; /* label nemení veľkosť */
-    font-size: 1.5rem;
-    font-weight: 700;
-}
+    .info-box {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
 
-.email-input {
-    flex-grow: 1; /* input vyplní zvyšok riadku */
-    border-radius: 0.75rem;
-    font-size: 1rem;
-    color: #111827;
+    .seats {
+        gap: 2rem;
+    }
+
+    .ticket-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .sum {
+        font-size: 1.2rem;
+    }
 }
 </style>

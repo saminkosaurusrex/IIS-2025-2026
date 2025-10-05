@@ -1,44 +1,47 @@
 <template>
     <div class="app-layout flex">
+        <!-- Sidebar vľavo -->
+
+        <!-- Hlavná časť stránky -->
         <div class="main-content flex flex-1 flex-col">
+            <!-- TopBar hore -->
             <NavMenu />
 
-            <div class="content p-4">
-                <div class="grid grid-cols-2 gap-8">
-                    <!-- Ľavá strana - Rezervácia -->
-                    <ReservationSummary
-                        :show-name="event.show.name"
-                        :rating="event.show.rating"
-                        :age-rating="event.show.age_rating"
-                        :duration="event.show.duration"
-                        :subtitles="event.show.subtitles"
-                        :genres="event.show.genres"
-                        :location="event.hall.name"
-                        :date-time="formatDateTime(event.starting_at)"
-                        :available-seats="availableSeatsCount"
-                        :occupied-seats="occupiedSeatsCount"
-                        :adult-tickets="adultTickets"
-                        :discounted-tickets="discountedTickets"
-                        :total-price="totalPrice"
-                        :email="email"
-                        :terms-accepted="termsAccepted"
-                        :can-submit="canSubmit"
-                        @update-adult="adultTickets = $event"
-                        @update-discounted="discountedTickets = $event"
-                        @update-email="email = $event"
-                        @update-terms="termsAccepted = $event"
-                        @submit="handleSubmit"
-                    />
+            <!-- Obsah stránky -->
+            <div class="content flex flex-col gap-4 p-4 lg:flex-row">
+                <!-- Seating chart -->
+                <ReservationSummary
+                    class="w-full max-w-md"
+                    :show-name="event.show.name"
+                    :rating="event.show.rating"
+                    :age-rating="event.show.age_rating"
+                    :duration="event.show.duration"
+                    :subtitles="event.show.subtitles"
+                    :genres="event.show.genres"
+                    :location="event.hall.name"
+                    :date-time="formatDateTime(event.starting_at)"
+                    :available-seats="availableSeatsCount"
+                    :occupied-seats="occupiedSeatsCount"
+                    :adult-tickets="adultTickets"
+                    :discounted-tickets="discountedTickets"
+                    :total-price="totalPrice"
+                    :email="email"
+                    :terms-accepted="termsAccepted"
+                    :can-submit="canSubmit"
+                    @update-adult="adultTickets = $event"
+                    @update-discounted="discountedTickets = $event"
+                    @update-email="email = $event"
+                    @update-terms="termsAccepted = $event"
+                    @submit="handleSubmit"
+                />
 
-                    <!-- Pravá strana - Sedadlá -->
-                    <SeatingChart
-                        :rows="event.hall.rows"
-                        :columns="event.hall.columns"
-                        :reserved-seats="reservedSeats"
-                        :selected-seats="selectedSeats"
-                        @seat-click="handleSeatClick"
-                    />
-                </div>
+                <SeatingChart
+                    :rows="event.hall.rows"
+                    :columns="event.hall.columns"
+                    :reserved-seats="reservedSeats"
+                    :selected-seats="selectedSeats"
+                    @seat-click="handleSeatClick"
+                />
             </div>
         </div>
     </div>
@@ -132,3 +135,10 @@ const handleSubmit = () => {
     });
 };
 </script>
+
+<style>
+.content {
+    height: 94vh;
+    gap: 1rem;
+}
+</style>
