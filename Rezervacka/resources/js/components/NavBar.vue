@@ -2,14 +2,14 @@
 <template>
     <header class="nav-header">
         <nav class="mx-auto px-6 lg:px-8">
-            <div class="flex h-16 items-center justify-between">
+            <div class="flex h-[6vh] items-center justify-between">
                 <!-- Logo a Menu vľavo -->
                 <div class="flex items-center gap-8">
                     <!-- Logo -->
                     <div class="flex-shrink-0">
                         <div class="flex h-10 w-10 items-center justify-center">
-                            <Link :href="'/'"  >
-                            <img src="/images/logo.svg" alt="Logo" />
+                            <Link :href="'/'">
+                                <img src="/images/logo.svg" alt="Logo" />
                             </Link>
                         </div>
                     </div>
@@ -78,7 +78,6 @@
 
             <!-- Mobile Menu -->
             <div v-if="isMenuOpen" class="nav-mobile-menu">
-
                 <Link
                     v-for="type in types"
                     :key="type.id"
@@ -102,27 +101,22 @@
 
 <script setup lang="ts">
 import { login, register } from '@/routes';
-import { ref } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
-
+import { ref } from 'vue';
 
 interface Type {
-    id: number
-    name: string
+    id: number;
+    name: string;
 }
 
-const page = usePage()
-const types = page.props.types as Type[]
-
+const page = usePage();
+const types = page.props.types as Type[];
 
 const isMenuOpen = ref<boolean>(false);
-
 
 const toggleMenu = (): void => {
     isMenuOpen.value = !isMenuOpen.value;
 };
-
-
 </script>
 
 <style scoped>
