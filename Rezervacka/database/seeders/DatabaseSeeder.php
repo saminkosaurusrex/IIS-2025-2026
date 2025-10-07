@@ -83,7 +83,7 @@ class DatabaseSeeder extends Seeder
             $columns = $event->hall->columns;
             for ($i = 1; $i <= $rows; $i++) {
                 for ($j = 1; $j <= $columns; $j++) {
-                    $shoud_insert = rand(0, 2);
+                    $shoud_insert = rand(0, 6);
 
                     // non registered reservation
                     if($shoud_insert == 1) {
@@ -95,8 +95,10 @@ class DatabaseSeeder extends Seeder
                             'name' => $faker->name(),
                             'email' => $faker->email(),
                             'user_id' => null,
-                            'selected_at' => now(),
+                            'reserved_at' => now(),
                             'confirmed_at' => now()->addMinutes(rand(0, 120))->addSeconds(rand(0, 60)),
+                            'paid_at' => null,
+                            'canceled_at' => null,
                         ];
                     }
                     //registered reservation
@@ -109,8 +111,26 @@ class DatabaseSeeder extends Seeder
                             'name' => null,
                             'email' => null,
                             'user_id' => $users->random()->id,
-                            'selected_at' => now(),
+                            'reserved_at' => now(),
                             'confirmed_at' => now()->addMinutes(rand(0, 120))->addSeconds(rand(0, 60)),
+                            'paid_at' => null,
+                            'canceled_at' => null,
+                        ];
+                    }
+                    //registered reservation non-confirmed
+                    else if($shoud_insert == 3) {
+                        $reservations[] =[
+                            'access_code' => Str::uuid(),
+                            'event_id' => $event->id,
+                            'row' => $i,
+                            'column' => $j,
+                            'name' => null,
+                            'email' => null,
+                            'user_id' => $users->random()->id,
+                            'reserved_at' => now(),
+                            'confirmed_at' => null,
+                            'paid_at' => null,
+                            'canceled_at' => null,
                         ];
                     }
                 }
@@ -123,7 +143,7 @@ class DatabaseSeeder extends Seeder
         foreach ($users as $user) {
             $selectedShows = $shows->random(2);
             foreach ($selectedShows as $show) {
-                $rating = rand(2, 10) / 2;
+                $rating = rand(1, 20) / 2;
                 $user->rated_shows()->attach($show->id, ['rating' => $rating]);
             }
         }

@@ -20,8 +20,10 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->integer('row');
             $table->integer('column');
-            $table->timestamp("selected_at")->nullable();
+            $table->timestamp("reserved_at");
             $table->timestamp("confirmed_at")->nullable();
+            $table->timestamp("paid_at")->nullable();
+            $table->timestamp("canceled_at")->nullable();
         });
     }
 

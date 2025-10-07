@@ -39,6 +39,9 @@ interface Props {
     rows: number;
     columns: number;
     reservedSeats: Array<{ row: number; column: number }>;
+    takenSeats: Array<{ row: number; column: number }>;
+    ownReservedSeats: Array<{ row: number; column: number }>;
+    ownTakenSeats: Array<{ row: number; column: number }>;
     selectedSeats?: Array<{ row: number; column: number }>;
 }
 
@@ -65,20 +68,35 @@ const gridStyle = computed(() => ({
     height: '80vh', // maximálna výška gridu
 }));
 
+
+const isOwnReserved= (row: number, col: number): boolean =>
+    props.ownReservedSeats.some((seat) => seat.row === row && seat.column === col);
+const isOwnTaken= (row: number, col: number): boolean =>
+    props.ownTakenSeats.some((seat) => seat.row === row && seat.column === col);
+
+
 const isReserved = (row: number, col: number): boolean =>
     props.reservedSeats.some((seat) => seat.row === row && seat.column === col);
+
+const isTaken = (row: number, col: number): boolean =>
+    props.takenSeats.some((seat) => seat.row === row && seat.column === col);
 
 const isSelected = (row: number, col: number): boolean =>
     props.selectedSeats.some((seat) => seat.row === row && seat.column === col);
 
 const getSeatClass = (row: number, col: number): string => {
-    if (isReserved(row, col)) return 'seat-occupied';
-    if (isSelected(row, col)) return 'seat-selected';
+    let border_style = "";
+    if(isOwnReserved(row, col) || isOwnTaken(row, col)) {
+        border_style += " own "
+    }
+    if (isReserved(row, col)) return 'seat-reserved' + border_style;
+    if (isTaken(row, col)) return 'seat-taken' + border_style;
+    if (isSelected(row, col)) return 'seat-selected'+ border_style;
     return 'seat-available';
 };
 
 const handleSeatClick = (row: number, col: number): void => {
-    if (!isReserved(row, col)) {
+    if (!isReserved(row, col) && !isTaken(row,col)) {
         emit('seat-click', row, col);
     }
 };
@@ -113,8 +131,14 @@ const handleSeatClick = (row: number, col: number): void => {
     height: 100%;
 }
 
-.seat-occupied {
-    background-color: red;
+.own{
+    border: 6px solid green;
+}
+.seat-reserved {
+    background-color: #FF8000;
+}
+.seat-taken{
+    background-color: #dc2626;
 }
 
 .seat-selected {

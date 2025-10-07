@@ -12,13 +12,50 @@ class EventController extends Controller
 {
     public function show($id){
 
+        $event = Event::with(['hall', 'show.tags','reservations' => function ($query) {
+            $query->select('id', 'event_id', 'row', 'user_id','column','reserved_at','confirmed_at','paid_at');
+        }])->where("id", $id)->FirstOrFail();
 
 
-        $event = Event::with(['hall', 'show', 'reservations'])->where("id", $id)->FirstOrFail();
+        $user = auth()->user();
+        $ownReservedSeats = [];
+        $ownTakenSeats = [];
+        if($user){
+            $ownReservedSeats = $event->reservations
+                ->filter(fn($r) => $r->reserved_at !== null && $r->confirmed_at == null
+                    && $r->paid_at == null && $r->canceled_at == null && $r->user_id == $user->id)
+                ->map(fn($r) => ['row' => $r->row, 'column' => $r->column])
+                ->values()
+                ->toArray();
+
+            $ownTakenSeats = $event->reservations
+                ->filter(fn($r) => $r->confirmed_at !== null && $r->reserved_at !== null && $r->canceled_at == null
+                    && $r->user_id == $user->id)
+                ->map(fn($r) => ['row' => $r->row, 'column' => $r->column])
+                ->values()
+                ->toArray();
+        }
+
+
+        $reservedSeats = $event->reservations
+            ->filter(fn($r) => $r->reserved_at !== null && $r->confirmed_at == null
+                && $r->paid_at == null && $r->canceled_at == null)
+            ->map(fn($r) => ['row' => $r->row, 'column' => $r->column])
+            ->values()
+            ->toArray();
+
+        $takenSeats = $event->reservations
+            ->filter(fn($r) => $r->confirmed_at !== null && $r->reserved_at !== null && $r->canceled_at == null)
+            ->map(fn($r) => ['row' => $r->row, 'column' => $r->column])
+            ->values()
+            ->toArray();
 
         return Inertia::render('Event',[
             'event' => $event,
-            'reservedSeats' => $event->reservations->map(fn($r) => ['row' => $r->row, 'column' => $r->column])
+            'reservedSeats' => $reservedSeats,
+            'takenSeats' => $takenSeats,
+            'ownReservedSeats' => $ownReservedSeats,
+            'ownTakenSeats' => $ownTakenSeats
         ]);
 
     }
@@ -43,6 +80,7 @@ class EventController extends Controller
     }
 
     public function store(Request $request){
+
         $validated = $request->validate([
             'hall' => 'required|exists:halls,id',
             'show' => 'required|exists:shows,id',

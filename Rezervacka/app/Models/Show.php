@@ -12,6 +12,7 @@ class Show extends Model
         'show_type_id',
         'image',
     ];
+    protected $appends = ['average_rating'];
 
     public function show_type()
     {
@@ -39,9 +40,17 @@ class Show extends Model
             ->withPivot('starting_at', 'ending_at', 'price');
     }
 
+    public function getAverageRatingAttribute(): ?float
+    {
+        return $this->rated_by_users()->avg('show_user.rating');
+
+    }
+
     public function rated_by_users(){
         return $this->belongsToMany(User::class)
                 ->withPivot('rating');
     }
+
+
 }
 

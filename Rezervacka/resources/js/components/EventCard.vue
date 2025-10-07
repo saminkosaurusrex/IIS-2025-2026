@@ -3,22 +3,27 @@
         <header class="header">
             <div class="header-top">
                 <h1 class="name">{{ showName }}</h1>
-                <div class="score">{{ rating }}</div>
+                <div v-if="rating" class="score">{{ rating }}</div>
             </div>
             <div class="details">
-                <span>{{ ageRating }}</span>
                 <span>{{ duration }} min</span>
-                <span>{{ subtitles }}</span>
             </div>
             <div class="tags">
-                <span v-for="genre in genres" :key="genre">{{ genre }}</span>
+                <span v-for="tag in tags" :key="tag.id">{{ tag.name }}</span>
             </div>
         </header>
 
         <div class="content">
             <div class="info-box">
                 <span>Kde:</span>
-                <span>{{ location }}</span>
+                <span>{{ hall }}</span>
+
+            </div>
+
+            <div class="info-box">
+                <span>Adresa:</span>
+                <span style="font-size: clamp(0.75rem, 2vw, 0.875rem);font-weight: 500">
+                    {{ location }}</span>
             </div>
 
             <div class="info-box datetime">
@@ -27,54 +32,49 @@
             </div>
 
             <div class="seats">
-                <div class="seat">
+
+                <div v-if="availableSeats" class="seat">
                     <div class="seat-box empty"></div>
                     <span class="seat-count">{{ availableSeats }}</span>
-                    <span class="seat-label">Voľné</span>
+                    <div class="seat-label">Voľné</div>
                 </div>
-                <div class="seat">
+
+                <div v-if="selectedSeats" class="seat">
+                    <div class="seat-box selected"></div>
+                    <span
+                        class="seat-count"
+                        :class="{ 'over-limit': selectedSeats > 6 }">
+                        {{ selectedSeats > 6 ? selectedSeats + '/6' : selectedSeats }}
+                    </span>
+                    <div class="seat-label">Vybraté</div>
+                </div>
+                <div v-if="ownReservedSeats" class="seat items-center">
+                    <div class="seat-box reserved own"></div>
+                    <span class="seat-count">{{ ownReservedSeats }}</span>
+                    <div class="seat-label">Vami </div>
+                    <div class="seat-label"> Rezervované</div>
+                </div>
+                <div v-if="reservedSeats" class="seat items-center">
+                    <div class="seat-box reserved "></div>
+                    <span class="seat-count">{{ reservedSeats }}</span>
+                    <div class="seat-label">Rezervované</div>
+                </div>
+                <div v-if="ownTakenSeats" class="seat">
+                    <div class="seat-box taken own"></div>
+                    <span class="seat-count">{{ ownTakenSeats }}</span>
+                    <div class="seat-label">Vami </div>
+                    <div class="seat-label"> Obsadené</div>
+                </div>
+                <div v-if="takenSeats" class="seat">
                     <div class="seat-box taken"></div>
-                    <span class="seat-count">{{ occupiedSeats }}</span>
-                    <span class="seat-label">Obsadené</span>
+                    <span class="seat-count">{{ takenSeats }}</span>
+                    <div class="seat-label">Obsadené</div>
                 </div>
             </div>
 
             <hr />
 
-            <div class="tickets-section">
-                <div class="ticket-row">
-                    <span>Dospelý:</span>
-                    <NumberField
-                        :default-value="adultTickets"
-                        :min="0"
-                        @update:model-value="
-                            (val) => $emit('update-adult', val)
-                        "
-                    >
-                        <NumberFieldContent>
-                            <NumberFieldDecrement />
-                            <NumberFieldInput />
-                            <NumberFieldIncrement />
-                        </NumberFieldContent>
-                    </NumberField>
-                </div>
-                <div class="ticket-row">
-                    <span>Deti, ZTP, 60+:</span>
-                    <NumberField
-                        :default-value="discountedTickets"
-                        :min="0"
-                        @update:model-value="
-                            (val) => $emit('update-discounted', val)
-                        "
-                    >
-                        <NumberFieldContent>
-                            <NumberFieldDecrement />
-                            <NumberFieldInput />
-                            <NumberFieldIncrement />
-                        </NumberFieldContent>
-                    </NumberField>
-                </div>
-            </div>
+
 
             <hr />
 
@@ -82,84 +82,85 @@
                 <span>Spolu:</span>
                 <span>{{ totalPrice.toFixed(2) }} €</span>
             </div>
-
             <hr />
 
-            <div class="email">
-                <span class="email-label">Email:</span>
-                <div class="email-input">
-                    <input
-                        type="email"
-                        :value="email"
-                        @input="
-                            $emit(
-                                'update-email',
-                                ($event.target as HTMLInputElement).value,
-                            )
-                        "
-                        class="w-full rounded-md border-2 border-gray-300 p-3 text-gray-900"
-                    />
+            <form @submit.prevent="emit('submit')" class="w-8/12 space-y-4">
+
+
+                <div class="space-y-4">
+                    <div v-if="!user">
+                        <Label for="Name">*Meno</Label>
+                        <Input v-model="form.name" type="text"/>
+                        <div class="text-sm text-red-600" v-if="form.errors.name">{{ form.errors.name }}</div>
+                    </div>
+
+                    <div v-if="!user">
+                        <Label for="Email">*Email</Label>
+                        <Input v-model="form.email" type="email"/>
+                        <div class="text-sm text-red-600" v-if="form.errors.email">{{ form.errors.email }}</div>
+                    </div>
+
+                    <div class="text-sm text-red-600" v-if="form.errors.event_id">{{ form.errors.event_id }}</div>
+                    <div  class="text-sm text-red-600">
+                        {{ form.errors.selectedSeats }}
+                    </div>
+                    <div class="text-sm text-red-600" v-if="form.errors.selectedSeatsTooMany">{{ form.errors.selectedSeatsTooMany }}</div>
+
+
+
+                    <Button type="submit" :disabled="form.processing">Rezervovať</Button>
+
                 </div>
-            </div>
-
-            <div class="checkbox-wrapper">
-                <Checkbox
-                    :checked="termsAccepted"
-                    @update:checked="$emit('update-terms', $event)"
-                />
-                <label>Podmienky</label>
-            </div>
-
-            <button
-                class="reserve-button"
-                :disabled="true"
-                @click="$emit('submit')"
-            >
-                Zaplatiť
-            </button>
+            </form>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-    NumberField,
-    NumberFieldContent,
-    NumberFieldDecrement,
-    NumberFieldIncrement,
-    NumberFieldInput,
-} from '@/components/ui/number-field';
+import Label from './ui/label/Label.vue';
+import { Button } from '@/components/ui/button';
+import Input from './ui/input/Input.vue';
+import { useForm } from '@inertiajs/vue3';
+import { usePage } from '@inertiajs/vue3';
 
 interface Props {
+    form: ReturnType<typeof useForm>;
     showName: string;
-    rating: string;
-    ageRating: string;
+    rating: number | null;
     duration: number;
-    subtitles: string;
-    genres: string[];
+    tags: {
+        id: number;
+        name: string;
+    }[];
+    hall: string;
     location: string;
     dateTime: string;
     availableSeats: number;
-    occupiedSeats: number;
+    selectedSeats: number;
+    takenSeats: number;
+    reservedSeats: number;
+    ownTakenSeats: number;
+    ownReservedSeats: number;
     adultTickets: number;
-    discountedTickets: number;
     totalPrice: number;
     email: string;
     termsAccepted: boolean;
     canSubmit: boolean;
 }
+const page = usePage();
+const user = page.props.auth.user;
+
 
 interface Emits {
     (e: 'update-adult', value: number): void;
-    (e: 'update-discounted', value: number): void;
     (e: 'update-email', value: string): void;
     (e: 'update-terms', value: boolean): void;
     (e: 'submit'): void;
 }
+const emit = defineEmits<Emits>()
 
 defineProps<Props>();
-defineEmits<Emits>();
+
 </script>
 
 <style scoped>
@@ -258,11 +259,19 @@ defineEmits<Emits>();
     font-weight: 700;
 }
 
+
+.seat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
 /* SEATS */
 .seats {
     display: flex;
     justify-content: center;
-    gap: clamp(1.5rem, 6vw, 4rem);
+    gap: clamp(1.5rem, 6vw, 2rem);
     padding: 1.5rem 0;
     flex-wrap: wrap;
 }
@@ -276,13 +285,28 @@ defineEmits<Emits>();
 .seat-box.empty {
     background-color: #d1d5db;
 }
+.seat-box.selected {
+    background-color: green;
+}
+.seat-box.reserved {
+    background-color: #FF8000;
+}
 .seat-box.taken {
     background-color: #dc2626;
+}
+
+.seat-box.own {
+    border: 6px solid green;
 }
 
 .seat-count {
     font-size: clamp(1.2rem, 3.5vw, 1.5rem);
     font-weight: 700;
+}
+
+.seat-count.over-limit {
+    color: red;
+    font-weight: bold;
 }
 
 /* SUM */

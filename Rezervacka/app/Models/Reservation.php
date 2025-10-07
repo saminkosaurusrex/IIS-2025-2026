@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class Reservation extends Model
 {
     public $timestamps = false;
-    protected $fillable = ['event_id', 'user_id', 'name', 'email', 'row', 'column', 'selected_at', 'confirmed_at'];
+    protected $fillable = ['event_id', 'access_code','user_id', 'name', 'email', 'row', 'column', 'reserved_at', 'confirmed_at','paid_at','canceled_at'];
 
     public function seat(){
         return $this->belongsTo(Seat::class);

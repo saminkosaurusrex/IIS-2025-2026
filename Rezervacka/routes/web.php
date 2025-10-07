@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Public\RegisterAssignController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
@@ -35,7 +36,7 @@ Route::group(['middleware' => ['auth', 'role:cashier'],],function (){
 
 // routes only for editor
 Route::group(['middleware' => ['auth', 'role:editor'],],function (){
-    
+
     // routes for halls
     Route::resource('halls', HallController::class)->except(['show']); // done
     // routes for show types
@@ -57,7 +58,14 @@ Route::group(['middleware' => ['auth', 'role:editor'],],function (){
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
+Route::get('/',function () {
+    return redirect()->to("/Filmy");
+})->name('home');
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+
+//Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/{show_type}', [ShowController::class, 'show']);
 Route::get('udalost/{id}', [EventController::class, 'show']);
+Route::post('/public/reservations', [\App\Http\Controllers\Public\ReservationController::class, 'store']);
+Route::get('/public/reservations/{event_id}', [\App\Http\Controllers\Public\ReservationController::class, 'show']);
+
