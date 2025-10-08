@@ -150,8 +150,8 @@ const deleteHandle = (id: number) => {
                             </TableCell>
                             <TableCell v-if="tValue.rows">{{ tValue.rows }}</TableCell>
                             <TableCell v-if="tValue.columns">{{ tValue.columns }}</TableCell>
-                            <TableCell v-if="tValue.canceled_at" class="bg-red-400 rounded-full text-center text-white">Zrušené</TableCell>
-                            <TableCell v-else-if="tValue.confirmed_at" class="bg-green-400 rounded-full text-center text-white">Potvrdené</TableCell>
+                            <TableCell v-if="tValue.canceled_at && props.nameProps.link == '/dashboard'" class="bg-red-400 rounded-full text-center text-white">Zrušené</TableCell>
+                            <TableCell v-else-if="tValue.confirmed_at && props.nameProps.link == '/dashboard'"" class="bg-green-400 rounded-full text-center text-white">Potvrdené</TableCell>
                             <TableCell v-else-if="props.nameProps.link === '/dashboard'" class="bg-orange-400 rounded-full text-center text-white">Čakajúce</TableCell>
                             <TableCell v-if="props.nameProps.link != '/dashboard'" class="text-center space-x-2">
                                 <Link :href="`${props.nameProps.link}/${tValue.id}/edit`">

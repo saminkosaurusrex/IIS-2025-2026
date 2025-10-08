@@ -24,7 +24,6 @@ interface Reservation {
 }
 
 const props = defineProps<{ reservation: Reservation }>();
-console.log(props.reservation);
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

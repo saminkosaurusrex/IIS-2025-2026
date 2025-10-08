@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import BaseTable from '@/components/BaseTable.vue';
-
+import { Head, usePage } from '@inertiajs/vue3';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { type BreadcrumbItem } from '@/types';
 interface Name {
     name: string;
     changeName: string;
@@ -16,7 +18,8 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-console.log(props.reservations);
+const page = usePage();
+console.log(page.props.auth.user.roles[0]);
 const tableValues = props.reservations;
 
 const nameProps: Name = {
@@ -25,12 +28,23 @@ const nameProps: Name = {
     link: '/dashboard',
 };
 
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Moje rezervácie',
+        href: `/dashboard`,
+    },
+];
+
 </script>
 
 <template>
-        <BaseTable
+        <BaseTable v-if="props.reservations.length != 0"
             :table-header="tableHeader" 
             :table-values="tableValues" 
             :name-props="nameProps"
         />
+        <Head :title="'Rezervácia'" />
+    <AppLayout :breadcrumbs="breadcrumbs">
+        <div class="w-1/1 text-center text-gray-500 mt-40 text-2xl">Zatiaľ žiadne rezervácie</div>
+    </AppLayout>
 </template>
