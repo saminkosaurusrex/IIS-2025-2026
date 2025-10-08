@@ -29,12 +29,21 @@
 
                 <!-- Desktop Auth Buttons vpravo -->
                 <div class="hidden md:flex md:items-center md:gap-3">
-                    <Link :href="login()" class="nav-btn-secondary">
-                        Prihlásiť sa
+                    <Link
+                        v-if="$page.props.auth.user"
+                        :href="'/dashboard'"
+                        class="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                    >
+                        Dashboard
                     </Link>
-                    <Link :href="register()" class="nav-btn-primary">
-                        Registrovať sa
-                    </Link>
+                    <template v-else>
+                        <Link :href="login()" class="nav-btn-secondary">
+                            Prihlásiť sa
+                        </Link>
+                        <Link :href="register()" class="nav-btn-primary">
+                            Registrovať sa
+                        </Link>
+                    </template>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -87,12 +96,24 @@
                     {{ type.name }}
                 </Link>
                 <div class="nav-mobile-buttons">
-                    <Link :href="login()" class="nav-mobile-btn-secondary">
-                        Prihlásiť sa
+
+                    <Link
+                        v-if="$page.props.auth.user"
+                        :href="'/dashboard'"
+                        class="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                    >
+                        Dashboard
                     </Link>
-                    <Link :href="register()" class="nav-mobile-btn-primary">
-                        Registrovať sa
-                    </Link>
+
+                    <template v-else>
+                        <Link :href="login()" class="nav-mobile-btn-secondary">
+                            Prihlásiť sa
+                        </Link>
+                        <Link :href="register()" class="nav-mobile-btn-primary">
+                            Registrovať sa
+                        </Link>
+                    </template>
+
                 </div>
             </div>
         </nav>
