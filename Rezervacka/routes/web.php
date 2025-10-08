@@ -13,16 +13,10 @@ use App\Http\Controllers\PerformerController;
 use App\Http\Controllers\ShowTypesController;
 use App\Http\Controllers\ReservationController;
 
-// public routes (accessible for both registered and unregistered user)
+// public routes (accessible for registered and unregistered user)
 
-
-
-
-
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+Route::get('dashboard', [ReservationController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('dashboard/{reservation}/show', [ReservationController::class, 'show'])->middleware(['auth', 'verified']);
 // routes only for admin
 Route::group(['middleware' => ['auth', 'role:admin'],],function (){
     // routes for users

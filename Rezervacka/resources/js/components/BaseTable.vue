@@ -23,7 +23,7 @@ interface Name {
 }
 
 interface TableValues {
-    id: number,
+    id?: number,
     name?: string,
     access_code?: string,
     hallName?: string,
@@ -41,6 +41,8 @@ interface TableValues {
     columns?: number
     tags?: string
     performers?: string[]
+    confirmed_at?: string
+    canceled_at?: string
 }
 interface Props {
     tableHeader: string[];       // názvy stĺpcov
@@ -81,7 +83,7 @@ const deleteHandle = (id: number) => {
                     </AlertDescription>
                 </Alert>
             </div>
-            <Link :href="`${props.nameProps.link}/create`"><Button>Vytvoriť {{ props.nameProps.changeName }}</Button>
+            <Link v-if="props.nameProps.link != '/dashboard'" :href="`${props.nameProps.link}/create`"><Button>Vytvoriť {{ props.nameProps.changeName }}</Button>
             </Link>
             <div>
                 <Table>
@@ -95,7 +97,7 @@ const deleteHandle = (id: number) => {
                     </TableHeader>
                     <TableBody class="relative">
                         <TableRow v-for="tValue in props.tableValues" :key="tValue.id">
-                            <TableCell>{{ tValue.id }}</TableCell>
+                            <TableCell v-if="tValue.id && props.nameProps.link != '/dashboard'" >{{ tValue.id }}</TableCell>
                             <TableCell v-if="tValue.name" class="font-medium">{{ tValue.name }}</TableCell>
                             <TableCell v-if="tValue.email">{{ tValue.email }}</TableCell>
                             <TableCell v-if="tValue.access_code" class="font-medium">Skrytý</TableCell>
@@ -148,11 +150,19 @@ const deleteHandle = (id: number) => {
                             </TableCell>
                             <TableCell v-if="tValue.rows">{{ tValue.rows }}</TableCell>
                             <TableCell v-if="tValue.columns">{{ tValue.columns }}</TableCell>
-                            <TableCell class="text-center space-x-2">
+                            <TableCell v-if="tValue.canceled_at" class="bg-red-400 rounded-full text-center text-white">Zrušené</TableCell>
+                            <TableCell v-else-if="tValue.confirmed_at" class="bg-green-400 rounded-full text-center text-white">Potvrdené</TableCell>
+                            <TableCell v-else-if="props.nameProps.link === '/dashboard'" class="bg-orange-400 rounded-full text-center text-white">Čakajúce</TableCell>
+                            <TableCell v-if="props.nameProps.link != '/dashboard'" class="text-center space-x-2">
                                 <Link :href="`${props.nameProps.link}/${tValue.id}/edit`">
                                 <Button class="bg-slate-600">Upraviť</Button>
                                 </Link>
                                 <Button @click="deleteHandle(tValue.id)" class="bg-red-600">Vymazať</Button>
+                            </TableCell>
+                            <TableCell v-else class="text-center">
+                                <Link :href="`${props.nameProps.link}/${tValue.id}/show`">
+                                <Button class="bg-slate-600">Zobraziť</Button>
+                                </Link>
                             </TableCell>
                         </TableRow>
                     </TableBody>

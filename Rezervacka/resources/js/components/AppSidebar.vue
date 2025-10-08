@@ -22,10 +22,9 @@ const userRoles = page.props.auth.user.roles
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Moje rezervácie',
         href: dashboard(),
         icon: LayoutGrid,
-        roles: ['admin', 'editor'],
     },
     {
         title: 'Užívatelia',
