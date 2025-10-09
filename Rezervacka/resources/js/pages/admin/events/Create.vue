@@ -64,7 +64,9 @@ interface BlockedTimeRange {
 
 const blockedTimes: Record<string, BlockedTimeRange[]> = {};
 function selectBlockedTimes() {
-
+    Object.keys(blockedTimes).forEach(key => {
+        delete blockedTimes[key];
+    });
     const blocked = props.events.filter(event => event.hall_id === form.hall
     );
 
