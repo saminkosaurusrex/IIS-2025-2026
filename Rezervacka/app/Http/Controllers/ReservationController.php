@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class ReservationController extends Controller
 {
     public function index(){
-        $reservations = Reservation::with(['user', 'event.show', 'event.hall'])->latest()->take(10)->get();
+        $reservations = Reservation::with(['user', 'event.show', 'event.hall'])->orderBy('reserved_at', 'desc')->take(10)->get();
         $reservations->map(function ($reservation){
             $reservation->name = $reservation->user->name ?? $reservation->name;
             $reservation->email = $reservation->user->email ?? $reservation->email;
@@ -23,7 +23,7 @@ class ReservationController extends Controller
     }
 
     public function dashboard(){
-        $reservations = Reservation::select('id','event_id', 'confirmed_at', 'canceled_at')->with(['event.show', 'event.hall'])->where('user_id', auth()->id())->latest()->get();
+        $reservations = Reservation::select('id','event_id', 'confirmed_at', 'canceled_at')->with(['event.show', 'event.hall'])->where('user_id', auth()->id())->orderBy('reserved_at', 'desc')->get();
         $reservations->map(function ($reservation){
             $reservation->showName = $reservation->event->show->name;
             $reservation->hallName = $reservation->event->hall->name;
@@ -35,7 +35,7 @@ class ReservationController extends Controller
     }
 
     public function show($id){
-        $reservation = Reservation::select('event_id','access_code' ,'confirmed_at', 'canceled_at', 'row', 'column')->with(['event.show', 'event.hall'])->where('id', $id)->latest()->first();
+        $reservation = Reservation::select('event_id','access_code' ,'confirmed_at', 'canceled_at', 'row', 'column')->with(['event.show', 'event.hall'])->where('id', $id)->orderBy('reserved_at', 'desc')->first();
         return Inertia::render('admin/reservations/Show', ['reservation' =>[
             'showName' => $reservation->event->show->name,
             'address' => $reservation->event->hall->address,

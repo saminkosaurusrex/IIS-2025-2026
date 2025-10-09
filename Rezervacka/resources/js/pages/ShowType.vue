@@ -39,7 +39,7 @@
                                                 <span class="text-gray-800">{{ formatDateTime(event.starting_at) }} – {{ formatDateTime(event.ending_at) }}</span>
                                             </div>
                                             <div class="text-right font-semibold text-gray-900">
-                                                {{ event.price.toFixed(2) }} €
+                                                {{ Number(event.price).toFixed(2) }} €
                                             </div>
                                         </li>
                                     </Link>
