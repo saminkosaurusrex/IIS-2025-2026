@@ -57,4 +57,14 @@ class ReservationController extends Controller
             'column' => $reservation->column
         ]]);
     }
+
+    public function edit($id){
+        $reservation = Reservation::where('id', $id)->first();
+        $reservation->update(['confirmed_at' => now()]);
+    }
+
+    public function destroy($id){
+        $reservation = Reservation::where('id', $id)->first();
+        $reservation->update(['canceled_at' => now()]);
+    }
 }
