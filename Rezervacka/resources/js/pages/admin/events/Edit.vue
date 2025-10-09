@@ -113,12 +113,15 @@ const isBlockedEnd = (hour: string) => {
   }
   return hour <= timeKey || hour > firstBlocked;
 }
-
+let firstRun = true
 watch(
   () => form.hall,
   (newHall, oldHall) => {
-    console.log('Hall sa zmenilo z', oldHall, 'na', newHall);
-    selectBlockedTimes();
+    if (firstRun) {
+      console.log('Hall sa zmenilo pri inicializácii na', newHall)
+      selectBlockedTimes()
+      firstRun = false
+    }
   },
   { immediate: true }
 );

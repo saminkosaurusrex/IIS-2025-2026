@@ -14,10 +14,16 @@ interface User {
     id: number,
     name: string,
     email: string,
-    role: Role[]
+    role: Role[],
+    halls_user: number[]
 }
 
-const props = defineProps<{ user: User }>();
+interface Props {
+    user: User,
+    halls: { id: number, name: string }[]
+}
+
+const props = defineProps<Props>();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -31,11 +37,15 @@ const form = useForm({
     email: props.user.email,
     password: '',
     password_confirmation: '',
-    role: props.user.role as Role[]
+    role: props.user.role as Role[],
+    halls: props.user.halls_user ? (props.user.halls_user as number[]) : [] as number[]
 });
 
 const handleSubmit = () => {
-    console.log(form);
+    if(!form.halls[0]){
+        console.log(form.halls);
+        form.halls.splice(0, 1);
+    }
     form.put(`/users/${props.user.id}`);
 };
 
@@ -45,6 +55,15 @@ const toggleRole = (role: Role): void => {
         form.role.splice(index, 1);
     } else {
         form.role.push(role);
+    }
+};
+
+const toggleHall = (hall: number): void => {
+    const index = form.halls.indexOf(hall);
+    if (index > -1) {
+        form.halls.splice(index, 1);
+    } else {
+        form.halls.push(hall);
     }
 };
 
@@ -85,6 +104,17 @@ const toggleRole = (role: Role): void => {
                             :class="form.role.includes('user') ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'"
                             @click="toggleRole('user')"> Používateľ
                         </Button>
+                    </div>
+                    <div v-if="form.role.includes('cashier')" class="space-y-2"> <Label for="User role">Pre vybrané
+                            sály</Label>
+                        <div class="flex space-x-2">
+                            <Button v-for="hall in props.halls" type="button"
+                                :class="form.halls.includes(hall.id) ? 'bg-blue-600 text-white hover:bg-blue-400' : 'bg-red-400 text-white hover:text-white hover:bg-red-600'"
+                                @click="toggleHall(hall.id)"> {{ hall.name }}
+                            </Button>
+                        </div>
+                        <div class="text-sm text-red-600" v-if="form.errors.halls">{{ form.errors.halls }}
+                        </div>
                     </div>
                     <div class="text-sm text-red-600" v-if="form.errors.role">{{ form.errors.email }}
                     </div>

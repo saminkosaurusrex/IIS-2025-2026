@@ -9,7 +9,15 @@ use Illuminate\Http\Request;
 class ReservationController extends Controller
 {
     public function index(){
-        $reservations = Reservation::with(['user', 'event.show', 'event.hall'])->orderBy('reserved_at', 'desc')->take(10)->get();
+        $user = auth()->user();
+        if($user->roles->pluck('name')->contains('admin')){
+            $reservations = Reservation::with(['user', 'event.show', 'event.hall'])->orderBy('reserved_at', 'desc')->get();
+        }else{
+            $reservations = Reservation::with(['user', 'event.show', 'event.hall'])->whereHas(
+                'event.hall', function ($query) use ($user){
+                    $query->whereIn('halls.id', $user->managed_halls()->pluck('halls.id'));
+                })->orderBy('reserved_at', 'desc')->get();
+        }
         $reservations->map(function ($reservation){
             $reservation->name = $reservation->user->name ?? $reservation->name;
             $reservation->email = $reservation->user->email ?? $reservation->email;

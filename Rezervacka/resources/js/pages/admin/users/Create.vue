@@ -15,12 +15,19 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 type Role = 'admin' | 'editor' | 'cashier' | 'user';
 
+interface Props{
+    halls: {id: number , name: string}[]
+}
+
+const props = defineProps<Props>();
+
 const form = useForm({
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
-    role: [] as Role[]
+    role: [] as Role[],
+    halls: [] as number[]
 });
 
 const handleSubmit = () => {
@@ -43,10 +50,19 @@ const toggleRole = (role: Role): void => {
     }
 };
 
+const toggleHall = (hall: number): void => {
+    const index = form.halls.indexOf(hall);
+    if (index > -1) {
+        form.halls.splice(index, 1);
+    } else {
+        form.halls.push(hall);
+    }
+};
+
+
 </script>
 
 <template>
-
     <Head title="Vytvorenie uživateľa" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -84,11 +100,20 @@ const toggleRole = (role: Role): void => {
                     <div class="text-sm text-red-600" v-if="form.errors.role">{{ form.errors.role }}
                     </div>
                 </div>
-
+                <div v-if="form.role.includes('cashier')" class="space-y-2"> <Label for="User role">Pre vybrané sály</Label>
+                    <div class="flex space-x-2">
+                        <Button v-for="hall in props.halls" type="button"
+                            :class="form.halls.includes(hall.id) ? 'bg-blue-600 text-white hover:bg-blue-400' : 'bg-red-400 text-white hover:text-white hover:bg-red-600'"
+                            @click="toggleHall(hall.id)"> {{hall.name}}
+                        </Button>
+                    </div>
+                    <div class="text-sm text-red-600" v-if="form.errors.halls">{{ form.errors.halls }}
+                    </div>
+                </div>
                 <div class="space-y-2">
                     <Label for="User password">Heslo</Label>
                     <Input v-model="form.password" type="password" placeholder="Heslo"></Input>
-                    <div class="text-sm text-red-600" v-if="form.errors.password"></div>
+                    <div class="text-sm text-red-600" v-if="form.errors.password">{{ form.errors.password }}</div>
                 </div>
                 <div class="space-y-2">
                     <Label for="User password confirmation">Potvrdenie hesla</Label>

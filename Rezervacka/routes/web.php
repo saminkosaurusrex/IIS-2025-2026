@@ -24,13 +24,13 @@ Route::group(['middleware' => ['auth', 'role:admin'],],function (){
 });
 
 // routes only for cashier
-Route::group(['middleware' => ['auth', 'role:cashier'],],function (){
+Route::group(['middleware' => ['auth', 'role:cashier|admin'],],function (){
     // routes for reservations
     Route::resource('reservations', ReservationController::class)->except(['show']);
 });
 
 // routes only for editor
-Route::group(['middleware' => ['auth', 'role:editor'],],function (){
+Route::group(['middleware' => ['auth', 'role:editor|admin'],],function (){
 
     // routes for halls
     Route::resource('halls', HallController::class)->except(['show']); // done

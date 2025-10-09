@@ -25,7 +25,6 @@ interface Name {
 interface TableValues {
     id?: number,
     name?: string,
-    access_code?: string,
     hallName?: string,
     showName?: string,
     starting_at?: string,
@@ -100,7 +99,6 @@ const deleteHandle = (id: number) => {
                             <TableCell v-if="tValue.id && props.nameProps.link != '/dashboard'" >{{ tValue.id }}</TableCell>
                             <TableCell v-if="tValue.name" class="font-medium">{{ tValue.name }}</TableCell>
                             <TableCell v-if="tValue.email">{{ tValue.email }}</TableCell>
-                            <TableCell v-if="tValue.access_code" class="font-medium">Skrytý</TableCell>
                             <TableCell v-if="tValue.hallName" class="font-medium">{{ tValue.hallName }}</TableCell>
                             <TableCell v-if="tValue.showName" class="font-medium">{{ tValue.showName }}</TableCell>
                             <TableCell v-if="tValue.description" class="overflow-x-auto max-w-xs whitespace-nowrap">{{

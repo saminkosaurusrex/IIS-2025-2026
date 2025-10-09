@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hall;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -20,7 +21,8 @@ class UserController extends Controller
     }
 
     public function create(){
-        return Inertia::render('admin/users/Create');
+        $halls = Hall::all();
+        return Inertia::render('admin/users/Create', compact('halls'));
     }
 
     public function store(Request $request){
@@ -30,8 +32,11 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|array',
             'role.*' => 'string|in:admin,cashier,editor,user',
+            'halls' => [Rule::requiredIf(
+                        fn () => in_array('cashier', $request->input('role', []))
+                        ),'array',],
+            'halls.*' => ['required', 'integer'],
         ]);
-
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -41,14 +46,17 @@ class UserController extends Controller
             if($role === 'user') continue;
             $user->assignRole($role);
         }
+        $user->managed_halls()->attach($validated['halls']);
         return redirect('/users')->with('success', 'Používateľ bol vytvorený');
 
     }
 
     public function edit($id){
+        $halls = Hall::all();
         $user = User::with('roles')->findOrFail($id);
         $user->role = $user->roles->pluck('name')->toArray() ?: ['user'];
-        return Inertia::render('admin/users/Edit', compact('user'));
+        $user->halls_user = $user->managed_halls()->pluck('hall_id')->toArray() ?: [''];
+        return Inertia::render('admin/users/Edit', compact(['user', 'halls']));
     }
 
     public function update(Request $request, $id)
@@ -59,6 +67,10 @@ class UserController extends Controller
             'email' => ['required','string','email','max:255', Rule::unique('users')->ignore($user->id)],
             'role' => 'required|array',
             'role.*' => 'string|in:admin,cashier,editor,user',
+            'halls' => [Rule::requiredIf(
+                        fn () => in_array('cashier', $request->input('role', []))
+                        ),'array',],
+            'halls.*' => ['required', 'integer'],
         ]);
         $user->update([
             'name' => $validated['name'],
@@ -68,6 +80,7 @@ class UserController extends Controller
         // Sync roles, ignorujeme 'user'
         $roles = array_filter($validated['role'], fn($r) => $r !== 'user');
         $user->syncRoles($roles);
+        $user->managed_halls()->sync($validated['halls']);
 
         return redirect('/users')->with('success', 'Používateľ bol upravený');
     }

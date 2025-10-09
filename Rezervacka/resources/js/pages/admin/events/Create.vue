@@ -174,7 +174,7 @@ const isBlockedEnd = (hour: string) => {
                                 {{ (hour - 1).toString().padStart(2, '0') }}:00
                             </option>
                         </select>
-                        <div class="text-sm text-red-600" v-if="form.errors.end_time">{{ form.errors.edn }}</div>
+                        <div class="text-sm text-red-600" v-if="form.errors.end_time">{{ form.errors.end_time }}</div>
                     </div>
                     <div class="space-y-2">
                         <Label for="Shows name">Cena lístka</Label>
