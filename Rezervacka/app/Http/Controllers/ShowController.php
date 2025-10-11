@@ -26,6 +26,18 @@ class ShowController extends Controller
         return Inertia::render('ShowType',['shows' => $shows]);
     }
 
+   public function showSpec($id)
+    {
+        // Získať show podľa ID, vrátane typu a tagov
+        $show = Show::with(['show_type', 'tags', 'performers', 'events.hall'])
+                    ->findOrFail($id);
+
+        // Poslať do Vue komponentu Show.vue
+        return Inertia::render('Show', [
+            'show' => $show
+        ]);
+    }
+
     public function index(){
         $shows = Show::with('show_type')->oldest()->get();
         $shows->map(function ($show) {
@@ -44,6 +56,24 @@ class ShowController extends Controller
         return Inertia::render('admin/shows/Create', compact(['show_types', 'tags', 'performers']));
     }
 
+    public function home(){
+        $shows = Show::with(['show_type', 'tags'])
+            ->latest()
+            ->take(3)
+            ->get();
+
+        $bestShows = Show::with(['show_type', 'events.hall'])
+            ->withAvg(['rated_by_users as average_rating'], 'show_user.rating')
+            ->orderByDesc('average_rating')
+            ->take(10)
+            ->get();
+
+         return Inertia::render('Home', [
+        'newestShows' => $shows,
+        'bestShows' => $bestShows,
+    ]);
+    }
+
     public function store(Request $request){
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -53,6 +83,7 @@ class ShowController extends Controller
             'performers' => 'required|array',
             'performers.*' => 'exists:performers,id',
             'image' => 'nullable|image|max:10000',
+            'description' => 'required|string',
         ]);
 
         if ($request->hasFile('image')) {
@@ -64,6 +95,7 @@ class ShowController extends Controller
             'name' => $validated['name'],
             'show_type_id' => $validated['show_types'],
             'image' => $validated['image'] ?? null,
+            'description' => $validated['description'],
         ]);
         $show->show_type()->associate($validated['show_types']);
         $show->tags()->attach($validated['tags']);

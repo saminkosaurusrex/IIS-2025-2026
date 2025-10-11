@@ -11,6 +11,7 @@ class Show extends Model
         'name',
         'show_type_id',
         'image',
+        'description',
     ];
     protected $appends = ['average_rating'];
 

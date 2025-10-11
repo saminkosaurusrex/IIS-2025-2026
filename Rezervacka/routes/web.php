@@ -24,14 +24,12 @@ Route::group(['middleware' => ['auth', 'role:admin'],],function (){
 });
 
 // routes only for cashier
-Route::group(['middleware' => ['auth', 'role:cashier|admin'],],function (){
-    // routes for reservations
-    Route::resource('reservations', ReservationController::class)->except(['show']);
-    Route::get('/api/reservations/{id}', [EventController::class, 'showApi']);
+Route::group(['middleware' => ['auth', 'role:cashier'],],function (){
+
 });
 
 // routes only for editor
-Route::group(['middleware' => ['auth', 'role:editor|admin'],],function (){
+Route::group(['middleware' => ['auth', 'role:editor'],],function (){
 
     // routes for halls
     Route::resource('halls', HallController::class)->except(['show']); // done
@@ -45,6 +43,8 @@ Route::group(['middleware' => ['auth', 'role:editor|admin'],],function (){
     Route::resource('shows', ShowController::class)->except(['show']); // done
     // routes for events
     Route::resource('events', EventController::class)->except(['show']);
+    // routes for reservations
+    Route::resource('reservations', ReservationController::class)->except(['show']);
 
 });
 
@@ -57,7 +57,10 @@ Route::get('/',function () {
 })->name('home');
 
 
-//Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [ShowController::class, 'home'])->name('home');
+Route::get('show/{id}', [ShowController::class, 'showSpec'])->name('show.spec');
+
+
 Route::get('/{show_type}', [ShowController::class, 'show']);
 Route::get('udalost/{id}', [EventController::class, 'show']);
 Route::post('/public/reservations', [\App\Http\Controllers\Public\ReservationController::class, 'store']);
