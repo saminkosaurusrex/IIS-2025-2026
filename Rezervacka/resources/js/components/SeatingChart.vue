@@ -40,8 +40,8 @@ interface Props {
     columns: number;
     reservedSeats: Array<{ row: number; column: number }>;
     takenSeats: Array<{ row: number; column: number }>;
-    ownReservedSeats: Array<{ row: number; column: number }>;
-    ownTakenSeats: Array<{ row: number; column: number }>;
+    ownReservedSeats?: Array<{ row: number; column: number }>;
+    ownTakenSeats?: Array<{ row: number; column: number }>;
     selectedSeats?: Array<{ row: number; column: number }>;
 }
 
@@ -70,9 +70,9 @@ const gridStyle = computed(() => ({
 
 
 const isOwnReserved= (row: number, col: number): boolean =>
-    props.ownReservedSeats.some((seat) => seat.row === row && seat.column === col);
+    props.ownReservedSeats?.some((seat) => seat.row === row && seat.column === col) ?? false;
 const isOwnTaken= (row: number, col: number): boolean =>
-    props.ownTakenSeats.some((seat) => seat.row === row && seat.column === col);
+    props.ownTakenSeats?.some((seat) => seat.row === row && seat.column === col) ?? false;
 
 
 const isReserved = (row: number, col: number): boolean =>

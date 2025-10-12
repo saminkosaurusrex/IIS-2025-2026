@@ -42,6 +42,7 @@ interface TableValues {
     performers?: string[]
     confirmed_at?: string
     canceled_at?: string
+    access_code?: string
 }
 interface Props {
     tableHeader: string[];       // názvy stĺpcov
@@ -61,8 +62,20 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const deleteHandle = (id: number) => {
-    if(confirm('Chceš vymazať záynam ' + props.tableValues.find(u => u.id === id)?.name + '?')){
-        router.delete(`${props.nameProps.link}/${id}`);
+    if(confirm('Chceš vymazať záznam ' + props.tableValues.find(u => u.id === id)?.name + '?')){
+        router.delete(`${props.nameProps.link}/${id}`, {
+            preserveScroll: true,
+            preserveState: false,
+        });
+    }
+};
+
+const cancelEvent = (id: number) => {
+    if(confirm('Chceš zrušiť rezerváciu ' + props.tableValues.find(u => u.id === id)?.name + '?')){
+        router.delete(`${props.nameProps.link}/${id}`, {
+            preserveScroll: true,
+            preserveState: false,
+        });
     }
 };
 
@@ -97,6 +110,7 @@ const deleteHandle = (id: number) => {
                     <TableBody class="relative">
                         <TableRow v-for="tValue in props.tableValues" :key="tValue.id">
                             <TableCell v-if="tValue.id && props.nameProps.link != '/dashboard'" >{{ tValue.id }}</TableCell>
+                            <TableCell v-if="tValue.access_code">{{ tValue.access_code }}</TableCell>
                             <TableCell v-if="tValue.name" class="font-medium">{{ tValue.name }}</TableCell>
                             <TableCell v-if="tValue.email">{{ tValue.email }}</TableCell>
                             <TableCell v-if="tValue.hallName" class="font-medium">{{ tValue.hallName }}</TableCell>
@@ -148,19 +162,20 @@ const deleteHandle = (id: number) => {
                             </TableCell>
                             <TableCell v-if="tValue.rows">{{ tValue.rows }}</TableCell>
                             <TableCell v-if="tValue.columns">{{ tValue.columns }}</TableCell>
-                            <TableCell v-if="tValue.canceled_at && props.nameProps.link == '/dashboard'" class="bg-red-400 rounded-full text-center text-white">Zrušené</TableCell>
-                            <TableCell v-else-if="tValue.confirmed_at && props.nameProps.link == '/dashboard'"" class="bg-green-400 rounded-full text-center text-white">Potvrdené</TableCell>
-                            <TableCell v-else-if="props.nameProps.link === '/dashboard'" class="bg-orange-400 rounded-full text-center text-white">Čakajúce</TableCell>
-                            <TableCell v-if="props.nameProps.link != '/dashboard'" class="text-center space-x-2">
+                            <TableCell v-if="tValue.canceled_at && props.nameProps.link == '/reservations'" class="bg-red-400 rounded-full text-center text-white">Zrušené</TableCell>
+                            <TableCell v-else-if="tValue.confirmed_at && props.nameProps.link == '/reservations'" class="bg-green-400 rounded-full text-center text-white">Potvrdené</TableCell>
+                            <TableCell v-else-if="props.nameProps.link === '/reservations'" class="bg-orange-400 rounded-full text-center text-white">Čakajúce</TableCell>
+                            <TableCell v-if="props.nameProps.link != '/reservations'" class="text-center space-x-2">
                                 <Link :href="`${props.nameProps.link}/${tValue.id}/edit`">
                                 <Button class="bg-slate-600">Upraviť</Button>
                                 </Link>
                                 <Button @click="deleteHandle(tValue.id)" class="bg-red-600">Vymazať</Button>
                             </TableCell>
-                            <TableCell v-else class="text-center">
-                                <Link :href="`${props.nameProps.link}/${tValue.id}/show`">
-                                <Button class="bg-slate-600">Zobraziť</Button>
+                            <TableCell v-else class="text-center space-x-2">
+                                <Link :href="`${props.nameProps.link}/${tValue.id}/edit`">
+                                <Button class="bg-slate-600">Potvrdiť</Button>
                                 </Link>
+                                <Button @click="cancelEvent(tValue.id)" class="bg-red-600">Zrušiť</Button>
                             </TableCell>
                         </TableRow>
                     </TableBody>

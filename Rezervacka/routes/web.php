@@ -27,6 +27,7 @@ Route::group(['middleware' => ['auth', 'role:admin'],],function (){
 Route::group(['middleware' => ['auth', 'role:cashier|admin'],],function (){
     // routes for reservations
     Route::resource('reservations', ReservationController::class)->except(['show']);
+    Route::get('/api/reservations/{id}', [EventController::class, 'showApi']);
 });
 
 // routes only for editor
