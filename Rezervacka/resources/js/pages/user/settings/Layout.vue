@@ -3,30 +3,18 @@ import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { toUrl, urlIsActive } from '@/lib/utils';
-import { edit as editAppearance } from '@/routes/appearance';
-import { edit as editPassword } from '@/routes/password';
-import { edit as editProfile } from '@/routes/profile';
-import { show } from '@/routes/two-factor';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
 
 const sidebarNavItems: NavItem[] = [
     {
         title: 'Profil',
-        href: editProfile(),
+        href: '/profile',
     },
     {
         title: 'Heslo',
-        href: editPassword(),
-    },
-    {
-        title: 'Two-Factor Auth',
-        href: show(),
-    },
-    {
-        title: 'Appearance',
-        href: editAppearance(),
-    },
+        href: '/password',
+    }
 ];
 
 const currentPath = typeof window !== undefined ? window.location.pathname : '';
@@ -35,8 +23,8 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
 <template>
     <div class="px-4 py-6">
         <Heading
-            title="Settings"
-            description="Manage your profile and account settings"
+            title="Nastavenia"
+            description="Upravujte si svoj profil"
         />
 
         <div class="flex flex-col lg:flex-row lg:space-x-12">

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Public\RegisterAssignController;
+use App\Http\Controllers\User\PasswordController;
+use App\Http\Controllers\User\ProfileController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
@@ -51,9 +53,28 @@ Route::group(['middleware' => ['auth', 'role:editor|admin'],],function (){
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
+
 Route::get('/',function () {
     return redirect()->to("/Filmy");
 })->name('home');
+
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/my-reservations', [\App\Http\Controllers\User\ReservationController::class, 'index']);
+    Route::get('/my-reservations/download', [\App\Http\Controllers\User\ReservationController::class, 'downloadPdf']);
+
+    // only user role
+    Route::get('profile', [ProfileController::class, 'edit']);
+    Route::patch('profile', [ProfileController::class, 'update']);
+    Route::delete('profile', [ProfileController::class, 'destroy']);
+
+    Route::get('password', [PasswordController::class, 'edit']);
+
+    Route::put('password', [PasswordController::class, 'update'])
+        ->middleware('throttle:6,1');
+});
+
 
 
 //Route::get('/', [HomeController::class, 'index'])->name('home');

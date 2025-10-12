@@ -108,7 +108,7 @@ const handleSubmit = () => {
 };
 </script>
 
-<style>
+<style scoped>
 .content {
     height: 94vh;
     gap: 1rem;

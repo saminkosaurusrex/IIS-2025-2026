@@ -1,4 +1,4 @@
-<script setup lang="ts">
+    <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
@@ -20,7 +20,7 @@ interface Reservation {
     confirmed_at: string
     canceled_at: string
     row: number
-    column: number 
+    column: number
 }
 
 const props = defineProps<{ reservation: Reservation }>();

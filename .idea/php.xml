@@ -152,6 +152,13 @@
       <path value="$PROJECT_DIR$/Rezervacka/vendor/theseer/tokenizer" />
       <path value="$PROJECT_DIR$/Rezervacka/vendor/brianium/paratest" />
       <path value="$PROJECT_DIR$/Rezervacka/vendor/spatie/laravel-permission" />
+      <path value="$PROJECT_DIR$/Rezervacka/vendor/dompdf/dompdf" />
+      <path value="$PROJECT_DIR$/Rezervacka/vendor/dompdf/php-svg-lib" />
+      <path value="$PROJECT_DIR$/Rezervacka/vendor/dompdf/php-font-lib" />
+      <path value="$PROJECT_DIR$/Rezervacka/vendor/masterminds/html5" />
+      <path value="$PROJECT_DIR$/Rezervacka/vendor/sabberworm/php-css-parser" />
+      <path value="$PROJECT_DIR$/Rezervacka/vendor/barryvdh/laravel-dompdf" />
+      <path value="$PROJECT_DIR$/Rezervacka/vendor/milon/barcode" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />

@@ -9,6 +9,15 @@ import AuthBase from '@/layouts/AuthLayout.vue';
 import { login } from '@/routes';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
+
+interface Props {
+    access_codes: string[];
+    name: string | undefined;
+    email: string | undefined;
+}
+const props = defineProps<Props>();
+const form = RegisteredUserController.store.form();
+
 </script>
 
 <template>
@@ -19,7 +28,7 @@ import { LoaderCircle } from 'lucide-vue-next';
         <Head title="Register" />
 
         <Form
-            v-bind="RegisteredUserController.store.form()"
+            v-bind="form"
             :reset-on-success="['password', 'password_confirmation']"
             v-slot="{ errors, processing }"
             class="flex flex-col gap-6"
@@ -36,6 +45,7 @@ import { LoaderCircle } from 'lucide-vue-next';
                         autocomplete="name"
                         name="name"
                         placeholder="Full name"
+                        :default-value="props.name"
                     />
                     <InputError :message="errors.name" />
                 </div>
@@ -49,6 +59,7 @@ import { LoaderCircle } from 'lucide-vue-next';
                         :tabindex="2"
                         autocomplete="email"
                         name="email"
+                        :default-value="props.email"
                         placeholder="email@example.com"
                     />
                     <InputError :message="errors.email" />
@@ -80,6 +91,26 @@ import { LoaderCircle } from 'lucide-vue-next';
                         placeholder="Confirm password"
                     />
                     <InputError :message="errors.password_confirmation" />
+                </div>
+
+                <div v-if="props.email" class="hidden">
+                    <Input
+                        id="reservation_email"
+                        type="email"
+                        required
+                        :tabindex="2"
+                        autocomplete="email"
+                        name="reservation_email"
+                        :default-value="props.email"
+                    />
+                </div>
+                <InputError :message="errors.reservation_email" />
+
+                <div >
+                    <template v-for="(code, index) in props.access_codes" :key="index">
+                        <input type="hidden" :name="'access_codes[]'" :value="code" />
+                    </template>
+                    <InputError :message="errors.access_codes" />
                 </div>
 
                 <Button

@@ -187,9 +187,15 @@ const totalPrice = computed(() => {
 });
 
 const loginUrl = computed(() => {
-    const accessCodes = props.event.reservations.map(r => r.access_code);
-    const query = accessCodes.map(code => `accessCode=${encodeURIComponent(code)}`).join('&');
-    return `/register/assign?${query}`;
+    const accessCodes = props.event.reservations.map(r =>
+        `accessCode=${encodeURIComponent(r.access_code)}`
+    );
+    const first = props.event.reservations[0];
+
+    accessCodes.push(`name=${encodeURIComponent(first.name)}`);
+    accessCodes.push(`email=${encodeURIComponent(first.email)}`);
+
+    return `/register?${accessCodes.join('&')}`;
 });
 
 const roundedRating = computed(() => {

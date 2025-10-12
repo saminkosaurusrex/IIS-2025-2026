@@ -112,7 +112,7 @@ class ReservationController extends Controller
             }
         });
         if($user){
-            return back();
+            return redirect()->to('/my-reservations');
 
         }else{
             return redirect()->to('/public/reservations/' . $data['event_id'] . '/?accesscodes=' . implode(',', $accessCodes));
@@ -127,16 +127,11 @@ class ReservationController extends Controller
         $accessCodesParam = $request->query('accesscodes');
         $accessCodes = $accessCodesParam ? explode(',', $accessCodesParam) : [];
 
-        $event = Event::with(['hall', 'show.tags', 'reservations' => function ($query) use ($accessCodes) {
-                if (!empty($accessCodes)) {
-                    $query->whereIn('access_code', $accessCodes)
-                        ->select("id","event_id","access_code", "name", "email", "row", "column", "reserved_at", "confirmed_at", "paid_at", "canceled_at");
-                }
-            }
-        ])->where('id', $event_id)->firstOrFail();
+        $reservations = Reservation::with(["event.hall","event.show.tags"])
+            ->whereIn("access_code", $accessCodes)
+            ->orderBy('id','desc')
+            ->get();
 
-        return Inertia::render("Reservation",[
-            'event' => $event,
-        ]);
+        return Inertia::render('user/reservations/Index',['reservations'=>$reservations]);
     }
 }

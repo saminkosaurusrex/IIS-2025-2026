@@ -29,21 +29,116 @@
 
                 <!-- Desktop Auth Buttons vpravo -->
                 <div class="hidden md:flex md:items-center md:gap-3">
-                    <Link
+                    <div
                         v-if="$page.props.auth.user"
-                        :href="'/dashboard'"
-                        class="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                        class="relative"
+                        ref="dropdownRef"
                     >
-                        Dashboard
-                    </Link>
-                    <template v-else>
-                        <Link :href="login()" class="nav-btn-secondary">
+                        <div
+                            class="flex cursor-pointer items-center gap-2 select-none"
+                            @click="toggleDropdown"
+                        >
+                            <UserInfo :user="$page.props.auth.user" />
+                            <ChevronsUpDown class="ml-auto size-4" />
+                        </div>
+
+                        <!-- Dropdown menu -->
+                        <transition name="fade-scale">
+                            <div
+                                v-if="dropdownOpen"
+                                class="absolute top-0 right-0 z-50 mt-2 min-w-[14rem] rounded-lg border border-gray-200 bg-white p-1 shadow-md dark:border-gray-700 dark:bg-[#1f1f1f]"
+                                style="transform: translate(15px, 55px)"
+                                data-reka-popper-content-wrapper
+                            >
+                                <div class="flex items-center gap-2 px-2 py-2">
+                                    <UserInfo :user="$page.props.auth.user" />
+                                </div>
+
+                                <div
+                                    class="my-1 h-px bg-gray-200 dark:bg-gray-700"
+                                ></div>
+
+                                <Link
+                                    :href="'/profile'"
+                                    class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-[#2a2a2a]"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="h-4 w-4 text-gray-500"
+                                    >
+                                        <path
+                                            d="M12 12c2.28 0 4-1.72 4-4s-1.72-4-4-4-4 1.72-4 4 1.72 4 4 4z"
+                                        />
+                                        <path
+                                            d="M4 20v-1c0-2.67 3.58-4 8-4s8 1.33 8 4v1"
+                                        />
+                                    </svg>
+                                    Profil
+                                </Link>
+
+                                <Link
+                                    :href="'/my-reservations'"
+                                    class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-[#2a2a2a]"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="2"
+                                        stroke="currentColor"
+                                        class="h-4 w-4 text-gray-500"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M8 7V3m8 4V3m-9 8h10m-11 8h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                        />
+                                    </svg>
+                                    Moje rezervácie
+                                </Link>
+
+                                <div
+                                    class="my-1 h-px bg-gray-200 dark:bg-gray-700"
+                                ></div>
+
+                                <Link
+                                    :href="logout()"
+                                    @click="handleLogout"
+                                    class="cursor-pointer flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="2"
+                                        stroke="currentColor"
+                                        class="h-4 w-4"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
+                                        />
+                                    </svg>
+                                    Odhlásiť sa
+                                </Link>
+                            </div>
+                        </transition>
+                    </div>
+                    <div v-else>
+                        <Link :href="'/login'" class="nav-btn-secondary">
                             Prihlásiť sa
                         </Link>
-                        <Link :href="register()" class="nav-btn-primary">
+                        <Link :href="'/register'" class="nav-btn-primary">
                             Registrovať sa
                         </Link>
-                    </template>
+                    </div>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -96,7 +191,6 @@
                     {{ type.name }}
                 </Link>
                 <div class="nav-mobile-buttons">
-
                     <Link
                         v-if="$page.props.auth.user"
                         :href="'/dashboard'"
@@ -113,7 +207,6 @@
                             Registrovať sa
                         </Link>
                     </template>
-
                 </div>
             </div>
         </nav>
@@ -121,9 +214,11 @@
 </template>
 
 <script setup lang="ts">
-import { login, register } from '@/routes';
-import { Link, usePage } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { login, logout, register } from '@/routes';
+import { Link, router, usePage } from '@inertiajs/vue3';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+import UserInfo from '@/components/UserInfo.vue';
+import { ChevronsUpDown } from 'lucide-vue-next';
 
 interface Type {
     id: number;
@@ -138,9 +233,46 @@ const isMenuOpen = ref<boolean>(false);
 const toggleMenu = (): void => {
     isMenuOpen.value = !isMenuOpen.value;
 };
+
+const handleLogout = () => {
+    router.flushAll();
+};
+
+// Dropdown (user profile) state
+const dropdownOpen = ref<boolean>(false);
+const dropdownRef = ref<HTMLElement | null>(null);
+
+const toggleDropdown = (): void => {
+    dropdownOpen.value = !dropdownOpen.value;
+};
+
+// Close dropdown when clicking outside
+const handleClickOutside = (event: MouseEvent): void => {
+    const target = event.target as Node;
+    if (dropdownRef.value && !dropdownRef.value.contains(target)) {
+        dropdownOpen.value = false;
+    }
+};
+
+onMounted(() => {
+    document.addEventListener('click', handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside);
+});
 </script>
 
 <style scoped>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.15s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
 /* Header */
 .nav-header {
     background-color: white;
