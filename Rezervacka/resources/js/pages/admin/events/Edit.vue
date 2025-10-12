@@ -138,7 +138,7 @@ watch(
       <form @submit.prevent="handleSubmit" class="w-8/12 space-y-4">
         <div class="space-y-2">
           <Label for="Event hall">Výber sály pre udalosť</Label>
-          <div class="flex space-x-2">
+          <div class="space-y-2 space-x-2">
             <Button v-for="hall in props.halls" type="button"
               :class="form.hall === hall.id ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:text-white'"
               @click="selectHall(hall.id)"> {{ hall.name }}
@@ -148,7 +148,7 @@ watch(
         </div>
         <div class="space-y-2">
           <Label for="Event hall">Výber udalosti</Label>
-          <div class="flex space-x-2">
+          <div class="space-y-2 space-x-2">
             <Button v-for="show in props.shows" type="button"
               :class="form.show === show.id ? 'bg-blue-600 text-white hover:bg-blue-400' : 'bg-red-400 text-white hover:text-white hover:bg-red-600'"
               @click="selectShow(show.id)"> {{ show.name }}
