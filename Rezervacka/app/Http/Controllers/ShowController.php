@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 class ShowController extends Controller
 {
     public function show($show_name){
-        $shows = Show::with(['show_type', 'tags','events.hall'])
+        $shows = Show::with(['show_type', 'tags', 'events.hall'])
             ->whereHas('show_type', function ($query) use ($show_name) {
                 $query->where('name', $show_name);
             })

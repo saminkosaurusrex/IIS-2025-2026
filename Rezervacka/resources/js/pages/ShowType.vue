@@ -107,31 +107,18 @@
 
                                 <!-- Actors/Cast -->
                                 <p
-                                    v-if="show.actors && show.actors.length > 0"
+                                    v-if="
+                                        show.performers &&
+                                        show.actors.length > 0
+                                    "
                                     class="mb-3 line-clamp-2 text-sm text-gray-600"
                                 >
-                                    {{ show.actors.join(', ') }}
+                                    {{ show.performers.join(', ') }}
                                 </p>
                                 <p v-else class="mb-3 text-sm text-gray-500">
                                     Cast information not available
                                 </p>
 
-                                <!-- Duration and Language -->
-                                <div
-                                    class="mb-3 flex items-center gap-4 text-sm text-gray-600"
-                                >
-                                    <span v-if="show.duration">{{
-                                        show.duration
-                                    }}</span>
-                                    <span
-                                        v-if="show.language"
-                                        class="rounded bg-gray-100 px-2 py-0.5 text-xs"
-                                    >
-                                        {{ show.language }}
-                                    </span>
-                                </div>
-
-                                <!-- Price and Book Button -->
                                 <div class="flex items-center justify-between">
                                     <span
                                         class="text-lg font-bold text-gray-900"
@@ -230,14 +217,6 @@ const filteredShows = computed(() => {
             return false;
         }
 
-        // Category filter
-        if (
-            selectedCategory.value &&
-            show.show_type?.name !== selectedCategory.value
-        ) {
-            return false;
-        }
-
         // Location filter
         if (selectedLocation.value) {
             const hasLocation = show.events?.some(
@@ -245,9 +224,7 @@ const filteredShows = computed(() => {
             );
             if (!hasLocation) return false;
         }
-
-        // Tags filter - for now just returns all if no tags selected
-        // You can implement custom logic based on your tag system
+        // tags filter
         if (selectedTags.value.length > 0) {
             const showTagNames = show.tags?.map((t: any) => t.name) || [];
             const hasMatchingTag = selectedTags.value.some((selectedTag) =>
