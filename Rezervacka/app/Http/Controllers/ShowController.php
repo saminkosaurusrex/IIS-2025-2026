@@ -42,7 +42,7 @@ class ShowController extends Controller
         $shows = Show::with('show_type')->oldest()->get();
         $shows->map(function ($show) {
             $show->type = $show->show_type->name;
-            $show->tags = $show->tags()->pluck('name')->join(', ');
+            $show->tags = $show->tags()->pluck('name')->toArray();
             $show->performers = $show->performers()->pluck('name')->toArray();
             return $show;
         });
@@ -123,6 +123,7 @@ class ShowController extends Controller
             'performers' => 'required|array',
             'performers.*' => 'exists:performers,id',
             'image' => 'nullable|image|max:10000',
+            'description' => 'required|string',
         ]);
 
         if ($request->hasFile('image')) {
@@ -147,6 +148,7 @@ class ShowController extends Controller
             'name' => $validated['name'],
             'show_type_id' => $validated['show_types'],
             'image' => $validated['image'] ?? null,
+            'description' => $validated['description'],
         ]);
         $show->show_type()->associate($validated['show_types']);
         $show->tags()->sync($validated['tags']);

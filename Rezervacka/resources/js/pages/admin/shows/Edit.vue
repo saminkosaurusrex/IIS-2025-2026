@@ -12,7 +12,8 @@ interface Show {
     show_type: { id: number, name: string },
     tags: { id: number, name: string }[],
     performers: { id: number, name: string }[],
-    image: string
+    image: string,
+    description: string,
 }
 
 interface Props {
@@ -39,6 +40,7 @@ const form = useForm({
     performers: props.show.performers.map(performer => performer.id),
     image: null as File | null,
     delete_image: false,
+    description: props.show.description,
     _method: 'PUT'
 });
 
@@ -90,6 +92,20 @@ const selectType = (type: number) => {
                     <Label for="Shows name">Názov predstavenia</Label>
                     <Input v-model="form.name" type="text" placeholder="Názov predstavenia"></Input>
                     <div class="text-sm text-red-600" v-if="form.errors.name">{{ form.errors.name }}</div>
+                </div>
+                <div class="space-y-2">
+                    <Label for="Shows name">Popisok</Label>
+                    <Input
+                        v-model="form.description"
+                        type="text"
+                        placeholder="Názov predstavenia"
+                    ></Input>
+                    <div
+                        class="text-sm text-red-600"
+                        v-if="form.errors.description"
+                    >
+                        {{ form.errors.description }}
+                    </div>
                 </div>
                 <div class="space-y-2">
                     <Label for="Shows type">Vybrať typ predstavenia</Label>

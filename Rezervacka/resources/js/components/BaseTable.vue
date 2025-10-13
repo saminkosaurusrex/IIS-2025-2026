@@ -38,7 +38,7 @@ interface TableValues {
     image?: string,
     rows?: number,
     columns?: number
-    tags?: string
+    tags?: string[]
     performers?: string[]
     confirmed_at?: string
     canceled_at?: string
@@ -125,7 +125,20 @@ const cancelEvent = (id: number) => {
                             <TableCell v-if="tValue.starting_at">{{ tValue.starting_at }}</TableCell>
                             <TableCell v-if="tValue.ending_at">{{ tValue.ending_at }}</TableCell>
                             <TableCell v-if="tValue.price">{{ tValue.price }} €</TableCell>
-                            <TableCell v-if="tValue.tags">{{ tValue.tags }} </TableCell>
+                            <TableCell v-if="tValue.tags" class="relative group">
+                                <span class="underline cursor-pointer">Zobraziť žánre</span>
+
+                                <!-- Hover list -->
+                                <div
+                                    class="fixed inset-0 flex items-center justify-center bg-black/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 pointer-events-none">
+                                    <ul class="pointer-events-none bg-white text-black p-3 m-3 rounded shadow">
+                                        <li v-for="tag in tValue.tags" :key="tag"
+                                            >
+                                            {{ tag }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </TableCell>
                             <TableCell v-if="tValue.role">{{ tValue.role }}</TableCell>
                             <TableCell v-if="tValue.performers" class="relative group">
                                 <span class="underline cursor-pointer">Zobraziť účinkujúcich</span>
