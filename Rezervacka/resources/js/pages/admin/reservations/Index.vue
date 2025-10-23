@@ -108,7 +108,7 @@ const updateReservation = (
 ) => {
     updateForm.reservation_id = reservation.id;
     updateForm.action = action.toString();
-    updateForm.put("reservations",{preserveScroll: true})
+    updateForm.put(`reservations/${updateForm.reservation_id}`,{preserveScroll: true})
 };
 
 const form = useForm({
