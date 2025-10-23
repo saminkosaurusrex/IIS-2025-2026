@@ -52,7 +52,8 @@ Route::group(['middleware' => ['auth', 'role:admin'],],function (){
 // routes only for cashier
 Route::group(['middleware' => ['auth', 'role:cashier'],],function (){
     // routes for reservations
-    Route::resource('reservations', ReservationController::class)->except(['show']);
+    Route::resource('reservations', ReservationController::class)->except(['show', 'update']);
+    Route::put('reservations', [ReservationController::class, 'update']);
     Route::get('api/reservations/{id}', [EventController::class, 'showApi']);
 });
 
