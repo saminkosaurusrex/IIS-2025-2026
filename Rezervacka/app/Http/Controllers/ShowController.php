@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rating;
+use App\Models\RatingModel;
 use App\Models\Tag;
 use App\Models\Show;
 use Inertia\Inertia;
@@ -32,9 +34,11 @@ class ShowController extends Controller
         $show = Show::with(['show_type', 'tags', 'performers', 'events.hall'])
                     ->findOrFail($id);
 
+        $user_rating = Rating::where('show_id', $id)->where("user_id",auth()->id())->first();
         // Poslať do Vue komponentu Show.vue
         return Inertia::render('Show', [
-            'show' => $show
+            'show' => $show,
+            'user_rating' => $user_rating,
         ]);
     }
 

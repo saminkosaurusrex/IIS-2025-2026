@@ -6,10 +6,11 @@
         <div class="main-content flex flex-1 flex-col">
             <!-- TopBar hore -->
             <NavMenu />
+            <h2 class="text-4xl font-bold px-6 pt-4">Moje Rezervácie</h2>
 
             <div v-if="groupedUpcoming.length > 0">
 
-                <h1 class="text-4xl font-bold px-6 pt-4">Budúce Udalosti</h1>
+                <h1 class="text-2xl font-bold px-6 pt-4">Budúce Udalosti</h1>
 
 
 
@@ -55,7 +56,7 @@
                             <TableBody class="relative">
                                     <TableRow class="bg-gray-100 font-bold ">
                                         <TableCell>Rada</TableCell>
-                                        <TableCell>Stĺpec</TableCell>
+                                        <TableCell>Sedadlo</TableCell>
                                         <TableCell>Cena</TableCell>
                                         <TableCell>Status</TableCell>
                                         <TableCell>Lístok</TableCell>
@@ -70,7 +71,7 @@
                                             {{ getReservationStatus(item) }}</TableCell>
 
 
-                                        <TableCell >
+                                        <TableCell v-if="!item.canceled_at" >
                                             <a :href="`/my-reservations/download?accessCode=${item.access_code}`" target="_blank">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -82,7 +83,7 @@
                                     </TableRow>
                             </TableBody>
                         </Table>
-                        <div class="mt-4">
+                        <div v-if="hasAtLeastOneValidReservation(group)" class="mt-4">
                             <a :href="downloadAllReservationUrl(group)" target="_blank">
                                 <Button>
                                     Stiahnuť všetky lístky
@@ -99,7 +100,7 @@
             </div>
 
             <div v-if="groupedPast.length > 0" class="mt-6">
-                <h2 class="text-4xl font-bold px-6 pt-4">Minulé události</h2>
+                <h2 class="text-2xl font-bold px-6 pt-4">Minulé události</h2>
                 <div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-4  p-4" >
                     <template v-for="(group, index) in groupedPast" :key="`past-${index}`">
                     <!-- Left: reservation card -->
@@ -142,7 +143,7 @@
                             <TableBody class="relative">
                                 <TableRow class="bg-gray-100 font-bold ">
                                     <TableCell>Rada</TableCell>
-                                    <TableCell>Stĺpec</TableCell>
+                                    <TableCell>Sedadlo</TableCell>
                                     <TableCell>Cena</TableCell>
                                     <TableCell>Status</TableCell>
 
@@ -192,6 +193,7 @@ import NavMenu from '@/components/NavBar.vue';
 import { computed } from 'vue';
 import {Button} from "@/components/ui/button";
 import {Link} from "@inertiajs/vue3";
+import Reservation from '@/pages/Reservation.vue';
 
 interface Props {
     reservations: {
@@ -231,6 +233,7 @@ interface Props {
 }
 
 const now = new Date()
+
 
 const upcomingReservations = computed(() =>
     props.reservations.filter(r => new Date(r.event.starting_at) > now)
@@ -289,17 +292,22 @@ const loginUrl = computed(() => {
 
 
 const getReservationStatus = (reservation: Props['reservations'][number]) => {
+    console.log(reservation);
     if (reservation.canceled_at) return 'Zrušené';
-    if (reservation.confirmed_at) return 'Potvrdené';
     if (reservation.paid_at) return 'Zaplatené';
+    if (reservation.confirmed_at) return 'Potvrdené';
     return 'Rezervované - čaká na potvrdenie';
 };
 
 const getReservationStatusStyle = (reservation: Props['reservations'][number]) => {
     if (reservation.canceled_at) return 'Zrušené';
-    if (reservation.confirmed_at) return 'Potvrdené';
     if (reservation.paid_at) return 'Zaplatené';
+    if (reservation.confirmed_at) return 'Potvrdené';
     return 'bg-gray-500';
+};
+
+const hasAtLeastOneValidReservation = (reservations: Props['reservations']) => {
+    return reservations.some(reservation => reservation.canceled_at === null);
 };
 
 

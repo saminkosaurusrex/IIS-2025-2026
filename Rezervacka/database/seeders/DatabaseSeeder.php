@@ -38,15 +38,15 @@ class DatabaseSeeder extends Seeder
 
         $tags = Tag::factory(self::TAG_COUNT)->create();
         $performers = Performer::factory(self::PERFORMERS_COUNT)->create();
-        $halls = Hall::factory(self::HALLS_COUNT)->create();
+
 
         $this->call([
+            HallSeeder::class,
             ShowTypeSeeder::class,
             ShowSeeder::class,
             RolesSeeder::class,
             UserSeeder::class,
         ]);
-
 
 
         $shows = Show::all();
@@ -62,20 +62,88 @@ class DatabaseSeeder extends Seeder
                     ->pluck('id')
                     ->toArray()
             );
+        }
 
-            foreach ($halls as $hall) {
-                $price = rand(500, 2000) / 10;
 
+
+        $shows_movie = $shows->filter(fn(Show $show) => $show->show_type_id == 1);
+        $prices = [12.0, 25.0, 30.0, 49.9, 99.98];
+
+        // Definovaný harmonogram podľa predchádzajúcej tabuľky
+        $daily_schedule = [
+            ['hall' => 1, 'show' => 0, 'start' => 8, 'end' => 10],
+            ['hall' => 2, 'show' => 1, 'start' => 8, 'end' => 10],
+            ['hall' => 3, 'show' => 2, 'start' => 8, 'end' => 10],
+            ['hall' => 4, 'show' => 3, 'start' => 8, 'end' => 10],
+            ['hall' => 5, 'show' => 4, 'start' => 8, 'end' => 10],
+
+            ['hall' => 1, 'show' => 5, 'start' => 11, 'end' => 13],
+            ['hall' => 2, 'show' => 6, 'start' => 11, 'end' => 13],
+            ['hall' => 3, 'show' => 7, 'start' => 11, 'end' => 13],
+            ['hall' => 4, 'show' => 8, 'start' => 11, 'end' => 13],
+            ['hall' => 5, 'show' => 0, 'start' => 11, 'end' => 13],
+
+            ['hall' => 1, 'show' => 1, 'start' => 14, 'end' => 16],
+            ['hall' => 2, 'show' => 2, 'start' => 14, 'end' => 16],
+            ['hall' => 3, 'show' => 3, 'start' => 14, 'end' => 16],
+            ['hall' => 4, 'show' => 4, 'start' => 14, 'end' => 16],
+            ['hall' => 5, 'show' => 5, 'start' => 14, 'end' => 16],
+
+            ['hall' => 1, 'show' => 6, 'start' => 17, 'end' => 19],
+            ['hall' => 2, 'show' => 7, 'start' => 17, 'end' => 19],
+            ['hall' => 3, 'show' => 8, 'start' => 17, 'end' => 19],
+            ['hall' => 4, 'show' => 0, 'start' => 17, 'end' => 19],
+            ['hall' => 5, 'show' => 1, 'start' => 17, 'end' => 19],
+
+            ['hall' => 1, 'show' => 2, 'start' => 20, 'end' => 22],
+            ['hall' => 2, 'show' => 3, 'start' => 20, 'end' => 22],
+            ['hall' => 3, 'show' => 4, 'start' => 20, 'end' => 22],
+            ['hall' => 4, 'show' => 5, 'start' => 20, 'end' => 22],
+            ['hall' => 5, 'show' => 6, 'start' => 20, 'end' => 22],
+
+        ];
+
+
+
+        for ($day = 1; $day <= 7; $day++) {
+            foreach ($daily_schedule as $slot) {
+                $hall_id = $slot['hall'];
+                $show = $shows_movie[$slot['show']];
                 Event::create([
-                        'hall_id' => $hall->id,
-                        'show_id' => $show->id,
-                        'starting_at' => now()->addDay()->setHour(14)->setMinute(0)->setSecond(0),
-                        'ending_at' => now()->addDay()->setHour(16)->setMinute(0)->setSecond(0),
-                        'price' => $price]
-                );
-
+                    'hall_id' => $hall_id,
+                    'show_id' => $show->id,
+                    'starting_at' => now()->addDays($day)->setHour($slot['start'])->setMinute(0)->setSecond(0),
+                    'ending_at' => now()->addDays($day)->setHour($slot['end'])->setMinute(0)->setSecond(0),
+                    'price' => $prices[$show->id % count($prices)],
+                ]);
             }
         }
+
+        $daily_schedule_others = [
+            ['hall' => 6, 'show' => 10, 'start' => 8, 'end' => 10],
+            ['hall' => 6, 'show' => 11, 'start' => 11, 'end' => 13],
+            ['hall' => 6, 'show' => 12, 'start' => 14, 'end' => 16],
+            ['hall' => 6, 'show' => 13, 'start' => 17, 'end' => 19],
+            ['hall' => 6, 'show' => 14, 'start' => 20, 'end' => 22],
+            ['hall' => 7, 'show' => 10, 'start' => 8, 'end' => 10],
+            ['hall' => 7, 'show' => 11, 'start' => 11, 'end' => 13],
+            ['hall' => 7, 'show' => 12, 'start' => 14, 'end' => 16],
+            ['hall' => 7, 'show' => 13, 'start' => 17, 'end' => 19],
+            ['hall' => 7, 'show' => 14, 'start' => 20, 'end' => 22],
+        ];
+
+        foreach ($daily_schedule_others as $slot) {
+            $hall_id = $slot['hall'];
+            $show_id = $slot['show'];
+            Event::create([
+                'hall_id' => $hall_id,
+                'show_id' => $show_id,
+                'starting_at' => now()->addDay()->setHour($slot['start'])->setMinute(0)->setSecond(0),
+                'ending_at' => now()->addDay()->setHour($slot['end'])->setMinute(0)->setSecond(0),
+                'price' => $prices[$show_id % count($prices)],
+            ]);
+        }
+
         $reservations = [];
         $events = Event::all();
         foreach ($events as $event) {
@@ -136,8 +204,10 @@ class DatabaseSeeder extends Seeder
                 }
             }
         }
+        foreach (array_chunk($reservations, 400) as $chunk) {
+            Reservation::insert($chunk);
+        }
 
-        Reservation::insert($reservations);
 
         // rating shows by user
         foreach ($users as $user) {

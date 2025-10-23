@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Public\RegisterAssignController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\User\PasswordController;
 use App\Http\Controllers\User\ProfileController;
 use Inertia\Inertia;
@@ -17,8 +18,31 @@ use App\Http\Controllers\ReservationController;
 
 // public routes (accessible for registered and unregistered user)
 
-Route::get('dashboard', [ReservationController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('dashboard/{reservation}/show', [ReservationController::class, 'show'])->middleware(['auth', 'verified']);
+
+Route::get('dashboard',function () {
+    $roles = auth()->user()->getRoleNames()->toArray();
+
+    if (in_array('admin', $roles)) {
+        return redirect()->to('users');
+    }
+
+    if (in_array('cashier',$roles)) {
+        return redirect()->to('reservations');
+    }
+
+    if (in_array('editor', $roles)) {
+        return redirect()->to('halls');
+    }
+
+
+
+    return redirect()->to("/");
+})->middleware('auth')->name('dashboard');
+
+
+
+
+
 // routes only for admin
 Route::group(['middleware' => ['auth', 'role:admin'],],function (){
     // routes for users
@@ -27,6 +51,8 @@ Route::group(['middleware' => ['auth', 'role:admin'],],function (){
 
 // routes only for cashier
 Route::group(['middleware' => ['auth', 'role:cashier'],],function (){
+    // routes for reservations
+    Route::resource('reservations', ReservationController::class)->except(['show']);
 
 });
 
@@ -45,8 +71,7 @@ Route::group(['middleware' => ['auth', 'role:editor'],],function (){
     Route::resource('shows', ShowController::class)->except(['show']); // done
     // routes for events
     Route::resource('events', EventController::class)->except(['show']);
-    // routes for reservations
-    Route::resource('reservations', ReservationController::class)->except(['show']);
+
 
 });
 
@@ -77,6 +102,9 @@ Route::middleware('auth')->group(function () {
 
     Route::put('password', [PasswordController::class, 'update'])
         ->middleware('throttle:6,1');
+
+
+    Route::post('rating', [RatingController::class, 'store']);
 });
 
 

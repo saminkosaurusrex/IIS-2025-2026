@@ -45,6 +45,19 @@
                     {{ show.description }}
                 </p>
 
+                <div class="flex flex-wrap items-center gap-2 mb-6 ">
+                    <b>Účinkujú:</b>
+                    <template v-for="performer in show.performers" :key="performer.id">
+                        {{performer.name}},
+                    </template>
+                </div>
+
+                <div v-if="$page.props.auth.user" class="flex flex-wrap items-center gap-2 mb-6 ">
+                    Vaše hodnotenie:
+                    <vue3-star-ratings v-model="form.rating" :disableClick="form.processing" />
+                </div>
+
+
                 <!-- Separator -->
                 <div class="mb-6 border-t border-gray-300"></div>
 
@@ -140,13 +153,29 @@
 </template>
 
 <script lang="ts" setup>
-import { Link } from '@inertiajs/vue3';
-import { computed, nextTick, ref } from 'vue';
+import { Link, useForm } from '@inertiajs/vue3';
+import { computed, nextTick, ref, watch } from 'vue';
 import NavMenu from '../components/NavBar.vue';
 
 const props = defineProps<{
     show: any;
+    user_rating: any;
 }>();
+
+
+
+const form = useForm({
+    rating: props.user_rating?.rating / 2 || 0,
+    show_id: props.show.id,
+});
+
+watch(() => form.rating, (newVal) => {
+    const roundedValue = Math.round(newVal * 2) / 2;
+    if (newVal !== roundedValue) {
+        form.rating = roundedValue;
+    }
+    form.post('/rating');
+});
 
 const selectedHall = ref('');
 const scrollContainer = ref<HTMLElement | null>(null);

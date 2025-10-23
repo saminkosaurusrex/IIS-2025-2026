@@ -28,6 +28,7 @@ class ReservationController extends Controller
 
         $reservations = Reservation::whereIn("access_code",$accessCodes)
             ->with(["event.hall","event.show.tags"])
+            ->whereNull("canceled_at")
             ->get();
 
         if ($reservations->isEmpty()) {

@@ -26,22 +26,22 @@ const passwordInput = ref<InstanceType<typeof Input> | null>(null);
 <template>
     <div class="space-y-6">
         <HeadingSmall
-            title="Delete account"
-            description="Delete your account and all of its resources"
+            title="Vymazať Účet"
+            description="Vymazať účet so všetkými dátami s ním spojené"
         />
         <div
             class="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10"
         >
             <div class="relative space-y-0.5 text-red-600 dark:text-red-100">
-                <p class="font-medium">Warning</p>
+                <p class="font-medium">Pozor</p>
                 <p class="text-sm">
-                    Please proceed with caution, this cannot be undone.
+                    Prosím, pokračujte opatrne, toto nie je možné vrátiť späť.
                 </p>
             </div>
             <Dialog>
                 <DialogTrigger as-child>
                     <Button variant="destructive" data-test="delete-user-button"
-                        >Delete account</Button
+                        >Vymazať účet</Button
                     >
                 </DialogTrigger>
                 <DialogContent>
@@ -57,28 +57,23 @@ const passwordInput = ref<InstanceType<typeof Input> | null>(null);
                     >
                         <DialogHeader class="space-y-3">
                             <DialogTitle
-                                >Are you sure you want to delete your
-                                account?</DialogTitle
+                                >Naozaj chcete odstrániť svoj účet?</DialogTitle
                             >
                             <DialogDescription>
-                                Once your account is deleted, all of its
-                                resources and data will also be permanently
-                                deleted. Please enter your password to confirm
-                                you would like to permanently delete your
-                                account.
+                                Po odstránení vášho účtu budú všetky jeho zdroje a údaje natrvalo vymazané. Zadajte svoje heslo na potvrdenie, že si želáte svoj účet natrvalo odstrániť.
                             </DialogDescription>
                         </DialogHeader>
 
                         <div class="grid gap-2">
                             <Label for="password" class="sr-only"
-                                >Password</Label
+                                >Heslo</Label
                             >
                             <Input
                                 id="password"
                                 type="password"
                                 name="password"
                                 ref="passwordInput"
-                                placeholder="Password"
+                                placeholder="Heslo"
                             />
                             <InputError :message="errors.password" />
                         </div>
@@ -94,7 +89,7 @@ const passwordInput = ref<InstanceType<typeof Input> | null>(null);
                                         }
                                     "
                                 >
-                                    Cancel
+                                    Zrušiť
                                 </Button>
                             </DialogClose>
 
@@ -104,7 +99,7 @@ const passwordInput = ref<InstanceType<typeof Input> | null>(null);
                                 :disabled="processing"
                                 data-test="confirm-delete-user-button"
                             >
-                                Delete account
+                                Vymazať účet
                             </Button>
                         </DialogFooter>
                     </Form>

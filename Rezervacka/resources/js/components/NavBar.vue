@@ -58,6 +58,15 @@
                                     class="my-1 h-px bg-gray-200 dark:bg-gray-700"
                                 ></div>
 
+                                    <Link
+                                        v-if="page.props.auth.user.roles.length > 0"
+                                        :href="'/dashboard'"
+                                        class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-[#2a2a2a]"
+                                    >
+                                        <svg  class="h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="14" rx="1"></rect><rect width="7" height="7" x="3" y="14" rx="1"></rect></svg>
+                                        Dashboard
+                                    </Link>
+                                <template v-else>
                                 <Link
                                     :href="'/profile'"
                                     class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-[#2a2a2a]"
@@ -82,6 +91,7 @@
                                     Profil
                                 </Link>
 
+                                </template>
                                 <Link
                                     :href="'/my-reservations'"
                                     class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-[#2a2a2a]"
@@ -102,7 +112,6 @@
                                     </svg>
                                     Moje rezervácie
                                 </Link>
-
                                 <div
                                     class="my-1 h-px bg-gray-200 dark:bg-gray-700"
                                 ></div>
@@ -191,13 +200,77 @@
                     {{ type.name }}
                 </Link>
                 <div class="nav-mobile-buttons">
-                    <Link
+                    <div
                         v-if="$page.props.auth.user"
-                        :href="'/dashboard'"
-                        class="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                        class="relative"
+                        ref="dropdownRef"
                     >
-                        Dashboard
-                    </Link>
+                        <div class="flex items-center gap-2 px-2 py-2">
+                            <UserInfo :user="$page.props.auth.user" />
+                        </div>
+
+                        <!-- Dropdown menu -->
+                        <Link
+                            v-if="page.props.auth.user.roles.length > 0"
+                            :href="'/dashboard'"
+                            class="flex items-center gap-2 rounded-md px-4 py-2 text-sm text-left hover:bg-gray-100 dark:hover:bg-[#2a2a2a]"
+                        >
+                            <svg class="h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="7" height="7" x="3" y="3" rx="1"></rect>
+                                <rect width="7" height="7" x="14" y="3" rx="1"></rect>
+                                <rect width="7" height="7" x="14" y="14" rx="1"></rect>
+                                <rect width="7" height="7" x="3" y="14" rx="1"></rect>
+                            </svg>
+                            Dashboard
+                        </Link>
+
+                        <template v-else>
+                            <Link
+                                :href="'/profile'"
+                                class="flex items-center gap-2 rounded-md px-4 py-2 text-sm text-left hover:bg-gray-100 dark:hover:bg-[#2a2a2a]"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round"
+                                     class="h-4 w-4 text-gray-500">
+                                    <path d="M12 12c2.28 0 4-1.72 4-4s-1.72-4-4-4-4 1.72-4 4 1.72 4 4 4z" />
+                                    <path d="M4 20v-1c0-2.67 3.58-4 8-4s8 1.33 8 4v1" />
+                                </svg>
+                                Profil
+                            </Link>
+                        </template>
+
+                        <Link
+                            :href="'/my-reservations'"
+                            class="flex items-center gap-2 rounded-md px-4 py-2 text-sm text-left hover:bg-gray-100 dark:hover:bg-[#2a2a2a]"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                 class="h-4 w-4 text-gray-500">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M8 7V3m8 4V3m-9 8h10m-11 8h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            Moje rezervácie
+                        </Link>
+
+
+                        <Link
+                            :href="logout()"
+                            @click="handleLogout"
+                            class="cursor-pointer flex items-center gap-2 rounded-md px-4 py-2 text-sm text-left text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                 class="h-4 w-4">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                            </svg>
+                            Odhlásiť sa
+                        </Link>
+                    </div>
+
 
                     <template v-else>
                         <Link :href="login()" class="nav-mobile-btn-secondary">
@@ -226,6 +299,7 @@ interface Type {
 }
 
 const page = usePage();
+console.log(page.props.auth.user)
 const types = page.props.types as Type[];
 
 const isMenuOpen = ref<boolean>(false);

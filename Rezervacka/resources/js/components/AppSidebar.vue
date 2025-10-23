@@ -22,11 +22,6 @@ const userRoles = page.props.auth.user.roles
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Moje rezervácie',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-    {
         title: 'Užívatelia',
         href: '/users',
         icon: User,
@@ -81,16 +76,7 @@ const filteredNavItems: NavItem[] = mainNavItems.filter(item =>
 )
 
 const footerNavItems: NavItem[] = [
-    {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
+
 ];
 </script>
 
