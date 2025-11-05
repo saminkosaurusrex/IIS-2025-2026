@@ -1,15 +1,11 @@
 <template>
     <div class="app-layout flex">
-        <!-- Sidebar vľavo -->
-
-        <!-- Hlavná časť stránky -->
         <div class="main-content flex flex-1 flex-col">
-            <!-- TopBar hore -->
             <NavMenu />
 
-            <!-- Obsah stránky -->
-            <div class="content flex flex-col gap-4 p-4 lg:flex-row">
-                <!-- Seating chart -->
+            <div
+                class="content flex flex-col justify-center gap-4 p-4 lg:flex-row"
+            >
                 <ReservationSummary
                     class="w-full max-w-md"
                     :form="form"
@@ -56,10 +52,9 @@
 import ReservationSummary from '@/components/EventCard.vue';
 import NavMenu from '@/components/NavBar.vue';
 import SeatingChart from '@/components/SeatingChart.vue';
+import { useForm, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
-import { useForm, usePage} from '@inertiajs/vue3';
 
-// Props z backendu
 interface Props {
     event: {
         show: {
@@ -75,13 +70,13 @@ interface Props {
         };
         hall: {
             name: string;
-            address: string
+            address: string;
             rows: number;
             columns: number;
         };
         id: number;
         starting_at: string;
-        starting_at_human: string,
+        starting_at_human: string;
         ending_at_human: number;
         price: number;
     };
@@ -95,16 +90,12 @@ const props = defineProps<Props>();
 const page = usePage();
 const user = page.props.auth.user;
 
-
-
-// Lokálny state
 const selectedSeats = ref<Array<{ row: number; column: number }>>([]);
 const adultTickets = ref(0);
 
 const email = ref('');
 const termsAccepted = ref(false);
 
-// Computed
 const totalSeats = computed(
     () => props.event.hall.rows * props.event.hall.columns,
 );
@@ -116,25 +107,17 @@ const takenSeatsCount = computed(() => props.takenSeats.length);
 const ownReservedSeatsCount = computed(() => props.ownReservedSeats.length);
 const ownTakenSeatsCount = computed(() => props.ownTakenSeats.length);
 
-
 const availableSeatsCount = computed(
     () => totalSeats.value - reservedSeatsCount.value - takenSeatsCount.value,
 );
 
 const totalPrice = computed(() => {
-    return (
-        selectedSeats.value.length * props.event.price
-    );
+    return selectedSeats.value.length * props.event.price;
 });
 
 const canSubmit = computed(() => {
-    return (
-        email.value !== '' &&
-        termsAccepted.value &&
-        (adultTickets.value > 0)
-    );
+    return email.value !== '' && termsAccepted.value && adultTickets.value > 0;
 });
-
 
 const roundedRating = computed(() => {
     return props.event.show.average_rating !== null
@@ -142,7 +125,6 @@ const roundedRating = computed(() => {
         : null;
 });
 
-// Methods
 const handleSeatClick = (row: number, col: number) => {
     const index = selectedSeats.value.findIndex(
         (s) => s.row === row && s.column === col,
@@ -154,20 +136,17 @@ const handleSeatClick = (row: number, col: number) => {
     }
 };
 
-
 const form = useForm({
     event_id: props.event.id,
     ...(user
-        ? { }
+        ? {}
         : {
-            name: '',
-            email: ''
-        }),
+              name: '',
+              email: '',
+          }),
     termsAccepted: '',
-    selectedSeats: [] as Array<{ row: number; column: number }>
+    selectedSeats: [] as Array<{ row: number; column: number }>,
 });
-
-
 
 const handleSubmit = () => {
     form.selectedSeats = selectedSeats.value;
@@ -175,21 +154,32 @@ const handleSubmit = () => {
         onError: (errors) => {
             if (errors?.selectedSeats) {
                 const message: string = errors.selectedSeats;
-                const seatsPart = message.replace('Tieto miesta sú už zabraté: ', '').trim();
+                const seatsPart = message
+                    .replace('Tieto miesta sú už zabraté: ', '')
+                    .trim();
                 const seatStrings = seatsPart.split(' ');
-                const takenSeats: Array<{ row: number; column: number }> = seatStrings.map(s => {
-                    const [row, column] = s.replace('[', '').replace(']', '').split(',');
-                    return { row: parseInt(row, 10), column: parseInt(column, 10) };
-                });
+                const takenSeats: Array<{ row: number; column: number }> =
+                    seatStrings.map((s) => {
+                        const [row, column] = s
+                            .replace('[', '')
+                            .replace(']', '')
+                            .split(',');
+                        return {
+                            row: parseInt(row, 10),
+                            column: parseInt(column, 10),
+                        };
+                    });
                 selectedSeats.value = selectedSeats.value.filter(
-                    s => !takenSeats.some(t => t.row === s.row && t.column === s.column)
+                    (s) =>
+                        !takenSeats.some(
+                            (t) => t.row === s.row && t.column === s.column,
+                        ),
                 );
-
             }
         },
-        onSuccess: () =>{
+        onSuccess: () => {
             selectedSeats.value.splice(0);
-        }
+        },
     });
 };
 </script>

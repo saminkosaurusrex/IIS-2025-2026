@@ -15,15 +15,18 @@ use Illuminate\Support\Facades\Storage;
 class ShowController extends Controller
 {
     public function show($show_name){
-        $shows = Show::with(['show_type', 'tags', 'events.hall'])
+        $shows = Show::with(['show_type', 'tags', 'events' => function ($query) {
+                $query->where('starting_at', '>', now())
+                    ->with('hall')
+                    ->orderBy('starting_at', 'asc');
+            }])
             ->whereHas('show_type', function ($query) use ($show_name) {
                 $query->where('name', $show_name);
             })
+            ->whereHas('events', function ($query) {
+                $query->where('starting_at', '>', now());
+            })
             ->get();
-
-        if ($shows->isEmpty()) {
-            abort(404, 'Žiadne predstavenia podľa typu neboli nájdené');
-        }
 
         return Inertia::render('ShowType',['shows' => $shows]);
     }
