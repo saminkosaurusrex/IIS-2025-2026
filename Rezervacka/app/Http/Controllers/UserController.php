@@ -27,7 +27,7 @@ class UserController extends Controller
 
     public function store(Request $request){
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[\p{L}-]+$/u',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|array',
@@ -63,7 +63,7 @@ class UserController extends Controller
     {
         $user = User::with('roles')->findOrFail($id);
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[\p{L}-]+$/u',
             'email' => ['required','string','email','max:255', Rule::unique('users')->ignore($user->id)],
             'role' => 'required|array',
             'role.*' => 'string|in:admin,cashier,editor,user',

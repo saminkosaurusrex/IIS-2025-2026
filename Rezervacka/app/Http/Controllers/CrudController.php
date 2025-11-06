@@ -26,7 +26,7 @@ class CrudController extends Controller
 
     public function store(Request $request){
         $request->validate([
-            'name' => 'required|string|max:255|unique:'.$this->viewPath.',name',
+            'name' => 'required|string|max:255|unique:'.$this->viewPath.',name|regex:/^[\p{L}-]+$/u',
         ]);
 
         ($this->modelClass)::create($request->only('name'));
@@ -43,7 +43,7 @@ class CrudController extends Controller
 
     public function update(Request $request, $id){
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:'.$this->viewPath.',name|regex:/^[\p{L}-]+$/u',
         ]);
         $item = ($this->modelClass)::findOrFail($id);
         $item->update($request->only('name'));

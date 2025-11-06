@@ -77,17 +77,17 @@ const toggleHall = (hall: number): void => {
         <div class="p-4">
             <form @submit.prevent="handleSubmit" class="w-8/12 space-y-4">
                 <div class="space-y-2">
-                    <Label for="User name">Meno a priezvisko</Label>
+                    <Label for="User name">*Meno a priezvisko</Label>
                     <Input v-model="form.name" type="text" placeholder="Meno a priezvisko"></Input>
                     <div class="text-sm text-red-600" v-if="form.errors.name">{{ form.errors.name }}</div>
                 </div>
                 <div class="space-y-2">
-                    <Label for="User email">E-mail</Label>
+                    <Label for="User email">*E-mail</Label>
                     <Input v-model="form.email" type="email" placeholder="E-mail"></Input>
                     <div class="text-sm text-red-600" v-if="form.errors.email">{{ form.errors.email }}</div>
                 </div>
 
-                <div class="space-y-2"> <Label for="User role">Rola</Label>
+                <div class="space-y-2"> <Label for="User role">*Rola</Label>
                     <div class="flex space-x-2">
                         <Button type="button"
                             :class="form.role.includes('admin') ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'"

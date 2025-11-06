@@ -65,7 +65,7 @@ const selectType = (type: number) => {
         <div class="p-4">
             <form @submit.prevent="handleSubmit" class="w-8/12 space-y-4">
                 <div class="space-y-2">
-                    <Label for="Shows name">Názov predstavenia</Label>
+                    <Label for="Shows name">*Názov predstavenia</Label>
                     <Input
                         v-model="form.name"
                         type="text"
@@ -76,7 +76,7 @@ const selectType = (type: number) => {
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <Label for="Shows name">Popisok</Label>
+                    <Label for="Shows name">*Popisok</Label>
                     <Input
                         v-model="form.description"
                         type="text"
@@ -90,7 +90,7 @@ const selectType = (type: number) => {
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <Label for="Shows type">Vybrať typ predstavenia</Label>
+                    <Label for="Shows type">*Vybrať typ predstavenia</Label>
                     <div class="flex space-x-2">
                         <Button
                             v-for="show_type in props.show_types"
@@ -114,7 +114,7 @@ const selectType = (type: number) => {
                 </div>
 
                 <div class="space-y-2">
-                    <Label for="Show tags">Vybrať žánre</Label>
+                    <Label for="Show tags">*Vybrať žánre</Label>
                     <div class="flex flex-wrap gap-3">
                         <Button
                             v-for="tag in props.tags"
@@ -134,7 +134,7 @@ const selectType = (type: number) => {
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <Label for="Show tags">Vybrať účinkujúcich</Label>
+                    <Label for="Show tags">*Vybrať účinkujúcich</Label>
                     <div class="flex flex-wrap gap-3">
                         <Button
                             v-for="performer in props.performers"

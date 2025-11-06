@@ -89,12 +89,12 @@ const selectType = (type: number) => {
         <div class="p-4">
             <form @submit.prevent="handleSubmit" class="w-8/12 space-y-4">
                 <div class="space-y-2">
-                    <Label for="Shows name">Názov predstavenia</Label>
+                    <Label for="Shows name">*Názov predstavenia</Label>
                     <Input v-model="form.name" type="text" placeholder="Názov predstavenia"></Input>
                     <div class="text-sm text-red-600" v-if="form.errors.name">{{ form.errors.name }}</div>
                 </div>
                 <div class="space-y-2">
-                    <Label for="Shows name">Popisok</Label>
+                    <Label for="Shows name">*Popisok</Label>
                     <Input
                         v-model="form.description"
                         type="text"
@@ -108,7 +108,7 @@ const selectType = (type: number) => {
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <Label for="Shows type">Vybrať typ predstavenia</Label>
+                    <Label for="Shows type">*Vybrať typ predstavenia</Label>
                     <div class="flex space-x-2">
                         <Button v-for="show_type in props.show_types" type="button"
                             :class="form.show_types === show_type.id ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:text-white'"
@@ -120,7 +120,7 @@ const selectType = (type: number) => {
                 </div>
 
                 <div class="space-y-2">
-                    <Label for="Show tags">Vybrať žánre</Label>
+                    <Label for="Show tags">*Vybrať žánre</Label>
                     <div class="flex flex-wrap gap-3">
                         <Button v-for="tag in props.tags" type="button"
                             :class="form.tags.includes(tag.id) ? 'bg-blue-600 text-white hover:bg-blue-400' : 'bg-red-400 text-white hover:text-white hover:bg-red-600'"
@@ -130,7 +130,7 @@ const selectType = (type: number) => {
                     <div class="text-sm text-red-600" v-if="form.errors.tags">{{ form.errors.tags }}</div>
                 </div>
                 <div class="space-y-2">
-                    <Label for="Show tags">Vybrať účinkujúcich</Label>
+                    <Label for="Show tags">*Vybrať účinkujúcich</Label>
                     <div class="flex flex-wrap gap-3">
                         <Button v-for="performer in props.performers" type="button"
                             :class="form.performers.includes(performer.id) ? 'bg-blue-600 text-white hover:bg-blue-400' : 'bg-gray-400 text-white hover:text-white hover:bg-gray-600'"

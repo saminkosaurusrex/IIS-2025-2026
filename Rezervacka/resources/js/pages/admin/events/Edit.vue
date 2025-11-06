@@ -152,7 +152,7 @@ watch(
         <div class="p-4">
             <form @submit.prevent="handleSubmit" class="w-8/12 space-y-4">
                 <div class="space-y-2">
-                    <Label for="Event hall">Výber sály pre udalosť</Label>
+                    <Label for="Event hall">*Výber sály pre udalosť</Label>
                     <div class="space-y-2 space-x-2">
                         <Button
                             v-for="hall in props.halls"
@@ -172,7 +172,7 @@ watch(
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <Label for="Event hall">Výber udalosti</Label>
+                    <Label for="Event hall">*Výber udalosti</Label>
                     <div class="space-y-2 space-x-2">
                         <Button
                             v-for="show in props.shows"
@@ -209,7 +209,7 @@ watch(
                     </div>
 
                     <div>
-                        <Label>Čas začiatku</Label>
+                        <Label>*Čas začiatku</Label>
                         <select
                             v-model="form.start_time"
                             class="w-full rounded border p-2"
@@ -242,7 +242,7 @@ watch(
                     </div>
 
                     <div>
-                        <Label>Čas konca</Label>
+                        <Label>*Čas konca</Label>
                         <select
                             v-model="form.end_time"
                             class="w-full rounded border p-2"
@@ -274,7 +274,7 @@ watch(
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <Label for="Shows name">Cena lístka</Label>
+                        <Label for="Shows name">*Cena lístka</Label>
                         <Input
                             v-model="form.price"
                             type="number"
