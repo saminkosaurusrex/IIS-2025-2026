@@ -13,6 +13,6 @@ const props = defineProps<{performers: Performers}>();
 <template>
     <BaseEditCreate
         :table-values="props.performers"
-        :name-props="{ action: 'Úprava' ,changeActionName: 'Upraviť' ,name: 'Účinkujúci', changeName: 'účinkujúceho', link: 'performers/', actionLink: 'edit' }"
+        :name-props="{ action: 'Úprava' ,changeActionName: 'Upraviť' ,name: 'Účinkujúci', changeName: 'účinkujúceho', link: 'performers', actionLink: 'edit' }"
     />
 </template>

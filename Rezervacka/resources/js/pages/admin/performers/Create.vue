@@ -10,7 +10,7 @@ import BaseEditCreate from '@/components/BaseEditCreate.vue';
             changeActionName: 'Vytvoriť',
             name: 'Účinkujúci',
             changeName: 'účinkujúceho',
-            link: 'performers/',
+            link: 'performers',
             actionLink: 'create'
         }" 
     />
