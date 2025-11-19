@@ -13,6 +13,6 @@ const props = defineProps<{show_types: Show_Type}>();
 <template>
     <BaseEditCreate
         :table-values="props.show_types"
-        :name-props="{ action: 'Úprava' ,changeActionName: 'Upraviť' ,name: 'Typ predstavenia', changeName: 'typu predstavenia', link: 'show_types/', actionLink: 'edit' }"
+        :name-props="{ action: 'Úprava' ,changeActionName: 'Upraviť' ,name: 'Typ predstavenia', changeName: 'typu predstavenia', link: 'show_types', actionLink: 'edit' }"
     />
 </template>

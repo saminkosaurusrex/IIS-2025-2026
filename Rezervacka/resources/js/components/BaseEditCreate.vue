@@ -35,7 +35,7 @@ const props = defineProps<Props>();
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: `${props.nameProps.action} ${props.nameProps.changeName}`,
-        href: `/${props.nameProps.link}${props.tableValues?.id}/${props.nameProps.actionLink}`,
+        href: `/${props.nameProps.link}/${props.tableValues?.id}/${props.nameProps.actionLink}`,
     },
 ];
 
@@ -44,10 +44,9 @@ const form = useForm({
 });
 
 const handleSubmit = () => {
-    console.log(form);
     props.nameProps.actionLink === 'create' ?
     form.post(`/${props.nameProps.link}`) :
-    form.put(`/${props.nameProps.link}${props.tableValues?.id}`);
+    form.put(`/${props.nameProps.link}/${props.tableValues?.id}`);
 };
 
 </script>
