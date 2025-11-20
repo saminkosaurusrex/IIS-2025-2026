@@ -2,12 +2,24 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 class Event extends Model
 {
+    use SoftDeletes;
+
+    protected static function booted()
+    {
+        static::deleting(function ($event) {
+            $event->reservations()->update([
+                'deleted_at' => now()
+            ]);
+        });
+    }
 
 
     protected $table = 'events';

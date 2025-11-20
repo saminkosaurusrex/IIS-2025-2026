@@ -175,7 +175,10 @@ const handleSubmit = () => {
         onError: (errors) => {
             if (errors?.selectedSeats) {
                 const message: string = errors.selectedSeats;
-                const seatsPart = message.replace('Tieto miesta sú už zabraté: ', '').trim();
+                const seatsPart = message.split(':')[1];
+
+                //const seatsPart = message.replace('Tieto miesta sú už zabraté: ', '').trim();
+                console.log(seatsPart);
                 const seatStrings = seatsPart.split(' ');
                 const takenSeats: Array<{ row: number; column: number }> = seatStrings.map(s => {
                     const [row, column] = s.replace('[', '').replace(']', '').split(',');

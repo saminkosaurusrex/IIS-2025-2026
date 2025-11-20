@@ -14,7 +14,8 @@ class EventController extends Controller
 
         $event = Event::with(['hall', 'show.tags','reservations' => function ($query) {
             $query->select('id', 'event_id', 'row', 'user_id','column','reserved_at','confirmed_at','paid_at');
-        }])->where("id", $id)->FirstOrFail();
+        }])->where("id", $id)
+            ->FirstOrFail();
 
 
         $user = auth()->user();
@@ -88,12 +89,16 @@ class EventController extends Controller
     }
 
     public function index(){
-        $events = Event::with(['hall', 'show'])->get();
+        $events = Event::with(['hall', 'show'])
+            ->paginate(30)->withQueryString();
+
+
         $events->map(function ($event){
             $event->hallName = $event->hall->name;
             $event->showName = $event->show->name;
             return $event;
         });
+
         return Inertia::render('admin/events/Index',[
             'events' => $events
         ]);

@@ -105,7 +105,7 @@ class DatabaseSeeder extends Seeder
 
 
 
-        for ($day = 1; $day <= 7; $day++) {
+        for ($day = 1; $day <= 90; $day++) {
             foreach ($daily_schedule as $slot) {
                 $hall_id = $slot['hall'];
                 $show = $shows_movie[$slot['show']];
@@ -131,21 +131,23 @@ class DatabaseSeeder extends Seeder
             ['hall' => 7, 'show' => 13, 'start' => 17, 'end' => 19],
             ['hall' => 7, 'show' => 14, 'start' => 20, 'end' => 22],
         ];
-
-        foreach ($daily_schedule_others as $slot) {
-            $hall_id = $slot['hall'];
-            $show_id = $slot['show'];
-            Event::create([
-                'hall_id' => $hall_id,
-                'show_id' => $show_id,
-                'starting_at' => now()->addDay()->setHour($slot['start'])->setMinute(0)->setSecond(0),
-                'ending_at' => now()->addDay()->setHour($slot['end'])->setMinute(0)->setSecond(0),
-                'price' => $prices[$show_id % count($prices)],
-            ]);
+        for ($day = 1; $day <= 90; $day++) {
+            foreach ($daily_schedule_others as $slot) {
+                $hall_id = $slot['hall'];
+                $show_id = $slot['show'];
+                Event::create([
+                    'hall_id' => $hall_id,
+                    'show_id' => $show_id,
+                    'starting_at' => now()->addDays($day)->setHour($slot['start'])->setMinute(0)->setSecond(0),
+                    'ending_at' => now()->addDays($day)->setHour($slot['end'])->setMinute(0)->setSecond(0),
+                    'price' => $prices[$show_id % count($prices)],
+                ]);
+            }
         }
 
         $reservations = [];
         $events = Event::all();
+
         foreach ($events as $event) {
             $rows = $event->hall->rows;
             $columns = $event->hall->columns;
@@ -203,10 +205,18 @@ class DatabaseSeeder extends Seeder
                     }
                 }
             }
+            if(count($reservations) >= 4000) {
+                foreach (array_chunk($reservations, 400) as $chunk) {
+                    Reservation::insert($chunk);
+                }
+                $reservations = [];
+            }
         }
         foreach (array_chunk($reservations, 400) as $chunk) {
             Reservation::insert($chunk);
         }
+
+
 
 
         // rating shows by user

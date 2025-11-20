@@ -34,7 +34,28 @@ class ReservationController extends Controller
 
 
 
-        $event = Event::where('id', $data['event_id'])->firstOrFail();
+        $event = Event::where('id', $data['event_id'])->with("hall")->firstOrFail();
+        $error_seats = "";
+        foreach($data['selectedSeats'] as $selectedSeat){
+            if ($selectedSeat["row"] > $event->hall->rows || $selectedSeat["column"] > $event->hall->columns)
+            {
+                $error_seats .= "[".$selectedSeat['row']. ",". $selectedSeat['column'] . "] ";
+            }
+        }
+
+        if (strlen($error_seats) > 0) {
+
+            redirect("/udalost/".$event->id)
+                ->withErrors([
+                    'selectedSeats' => "Vybraté miesta mimo rozloženia sály: ".$error_seats,
+                ])
+                ->withInput();
+
+
+            return back()->withErrors([
+                'selectedSeats' => "Vybraté miesta mimo rozloženia sály: ".$error_seats,
+            ])->withInput();
+        }
 
         if (Carbon::parse($event->starting_at)->isPast()) {
             return back()->withErrors([

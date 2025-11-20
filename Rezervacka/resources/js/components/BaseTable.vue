@@ -115,7 +115,7 @@ const cancelEvent = (id: number) => {
                             <TableCell v-if="tValue.email">{{ tValue.email }}</TableCell>
                             <TableCell v-if="tValue.hallName" class="font-medium">{{ tValue.hallName }}</TableCell>
                             <TableCell v-if="tValue.showName" class="font-medium">{{ tValue.showName }}</TableCell>
-                            <TableCell v-if="tValue.description" class="overflow-x-auto max-w-xs whitespace-nowrap">{{
+                            <TableCell v-if="tValue.description" class="max-w-[150px] truncate text-left">{{
                                 tValue.description }}
                             </TableCell>
                             <TableCell v-if="tValue.address" class="overflow-x-auto max-w-xs whitespace-nowrap">{{

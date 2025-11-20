@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('starting_at');
             $table->timestamp('ending_at');
             $table->decimal("price",7,2);
+            $table->softDeletes();
         });
     }
 

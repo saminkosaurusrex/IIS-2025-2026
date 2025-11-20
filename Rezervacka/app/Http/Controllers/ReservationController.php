@@ -12,7 +12,7 @@ use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class ReservationController extends Controller
+class   ReservationController extends Controller
 {
 
     public function index(Request $request){
@@ -127,11 +127,20 @@ class ReservationController extends Controller
                 ->pluck('id')
                 ->toArray();
 
+            if(empty($managedHallIds)){
+                $reservationsQuery->whereHas('event.hall', function ($q) use ($managedHallIds) {
+                    $q->whereIn('id', $managedHallIds);
+                });
+            }
+
 
             if (!empty($hallsFilter)) {
-
                 $reservationsQuery->whereHas('event.hall', function ($q) use ($filterHallIds) {
                     $q->whereIn('id', $filterHallIds);
+                });
+            }else{
+                $reservationsQuery->whereHas('event.hall', function ($q) use ($managedHallIds) {
+                    $q->whereIn('id', $managedHallIds);
                 });
             }
             if (!empty($showsFilter)) {
@@ -147,11 +156,10 @@ class ReservationController extends Controller
                 ->get();
 
 
+
         }
 
 
-
-        // paginácia s query stringom
         $reservations = $reservationsQuery->paginate(30)->withQueryString();
 
 

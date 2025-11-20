@@ -21,9 +21,6 @@ class ShowController extends Controller
             })
             ->get();
 
-        if ($shows->isEmpty()) {
-            abort(404, 'Žiadne predstavenia podľa typu neboli nájdené');
-        }
 
         return Inertia::render('ShowType',['shows' => $shows]);
     }
@@ -31,8 +28,12 @@ class ShowController extends Controller
    public function showSpec($id)
     {
         // Získať show podľa ID, vrátane typu a tagov
-        $show = Show::with(['show_type', 'tags', 'performers', 'events.hall'])
-                    ->findOrFail($id);
+        $show = Show::with(['show_type', 'tags', 'performers', 'events' => function ($query) {
+            $query->where('starting_at', '>=', now())
+                ->where('ending_at', '<=', now()->addDays(7))
+                ->with('hall');
+        }
+        ])->findOrFail($id);
 
         $user_rating = Rating::where('show_id', $id)->where("user_id",auth()->id())->first();
         // Poslať do Vue komponentu Show.vue

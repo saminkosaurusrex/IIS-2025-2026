@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Show extends Model
 {
+    use SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -14,6 +17,25 @@ class Show extends Model
         'description',
     ];
     protected $appends = ['average_rating'];
+
+
+    protected static function booted()
+    {
+        static::deleting(function ($show) {
+            $eventIds = $show->events()->pluck('id');
+            $show->events()->update([
+                'deleted_at' => now()
+            ]);
+
+            if ($eventIds->isNotEmpty()) {
+                DB::table('reservations')
+                    ->whereIn('event_id', $eventIds)
+                    ->update(['deleted_at' => now()]);
+            }
+
+
+        });
+    }
 
     public function show_type()
     {

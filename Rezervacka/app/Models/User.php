@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -13,6 +14,18 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles;
+    use SoftDeletes;
+
+    //protected $cascadeDeletes = ['reservations'];
+
+    protected static function booted()
+    {
+        static::deleting(function ($user) {
+            $user->reservations()->update([
+                'deleted_at' => now()
+            ]);
+        });
+    }
 
     /**
      * The attributes that are mass assignable.

@@ -50,6 +50,42 @@ class HallController extends Controller
             'columns' => 'required|integer|min:1',
         ]);
 
+        $errors = [];
+        if ($request->rows < $hall->rows){
+
+            $hasRowReservations = Hall::whereId($hall->id)->whereHas('events.reservations', function ($query) use ($hall, $request) {
+                $query->where(function($q) use ($hall, $request) {
+                    $q->where('row', '>', $request->rows);
+                });
+            })->exists();
+
+            if($hasRowReservations){
+                $errors['rows'] = 'Niektoré existujúce rezervácie sú v radoch nad novým limitom.';
+
+            }
+
+        }
+        if($request->columns < $hall->columns) {
+            $hasColReservations = Hall::whereId($hall->id)->whereHas('events.reservations', function ($query) use ($hall, $request) {
+                $query->where(function($q) use ($hall, $request) {
+                    $q->where('column', '>', $request->columns);
+                });
+
+            })->exists();
+
+
+            if($hasColReservations){
+                $errors['columns'] = 'Niektoré existujúce rezervácie sú v stĺpcoch nad novým limitom.';
+            }
+
+        }
+
+        if(!empty($errors)){
+            return redirect()->back()
+                ->withErrors($errors)
+                ->withInput();
+        }
+
         $hall->update([
             'name' => $request->name,
             'address' => $request->address,
@@ -57,6 +93,8 @@ class HallController extends Controller
             'rows' => $request->rows,
             'columns' => $request->columns,
         ]);
+
+
 
         return redirect('/halls')->with('success', 'Sála bola úspešne upravená.');
     }
