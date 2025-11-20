@@ -13,6 +13,6 @@ const props = defineProps<{tags: Tags}>();
 <template>
     <BaseEditCreate
         :table-values="props.tags"
-        :name-props="{ action: 'Úprava' ,changeActionName: 'Upraviť' ,name: 'Žáner', changeName: 'žánru', link: 'tags/', actionLink: 'edit' }"
+        :name-props="{ action: 'Úprava' ,changeActionName: 'Upraviť' ,name: 'Žáner', changeName: 'žánru', link: 'tags', actionLink: 'edit' }"
     />
 </template>

@@ -10,7 +10,7 @@ import BaseEditCreate from '@/components/BaseEditCreate.vue';
             changeActionName: 'Vytvoriť',
             name: 'Žáner',
             changeName: 'žánru',
-            link: 'tags/',
+            link: 'tags',
             actionLink: 'create'
         }"
     />

@@ -2,7 +2,6 @@
     <div class="app-layout flex h-screen flex-col overflow-hidden">
         <NavMenu />
 
-        <!-- Banner - 50% výšky -->
         <section class="banner relative h-[50vh] overflow-hidden">
             <img
                 v-if="currentShow.image"
@@ -49,7 +48,7 @@
             </div>
 
             <div
-                class="absolute bottom-3 left-3 z-20 w-fit cursor-pointer rounded-xl bg-amber-50 px-4 py-2 font-medium transition-colors hover:bg-amber-100 sm:bottom-4 sm:left-4 sm:rounded-2xl sm:px-6 sm:py-3"
+                class="absolute bottom-3 left-3 z-20 w-fit cursor-pointer rounded-xl bg-amber-50 px-4 py-2 font-medium transition-colors hover:bg-[#D90429] hover:text-white sm:bottom-4 sm:left-4 sm:rounded-2xl sm:px-6 sm:py-3"
                 style="font-size: clamp(0.875rem, 1.2vw, 1.125rem)"
                 @click.stop="onCardClick(currentShow)"
             >
@@ -71,7 +70,6 @@
             </div>
         </section>
 
-        <!-- Sekcia Odporúčame -->
         <div class="flex flex-col p-3 sm:p-4 md:p-6">
             <h1
                 class="mb-2 text-center font-semibold sm:mb-3 md:mb-4"
@@ -81,10 +79,9 @@
             </h1>
 
             <div class="relative flex w-full items-center gap-4">
-                <!-- Šípka vľavo -->
                 <button
                     @click="scrollLeft"
-                    class="z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-white/90 shadow-lg transition-all hover:scale-110 hover:bg-white disabled:cursor-not-allowed disabled:opacity-50 sm:h-12 sm:w-12"
+                    class="z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-white/90 shadow-lg transition-all hover:scale-110 hover:bg-[#D90429] hover:text-white disabled:cursor-not-allowed disabled:opacity-50 sm:h-12 sm:w-12"
                     :disabled="scrollPosition <= 0"
                 >
                     <svg
@@ -103,7 +100,6 @@
                     </svg>
                 </button>
 
-                <!-- Scroll container -->
                 <div
                     ref="scrollContainer"
                     @scroll="updateScrollPosition"
@@ -114,17 +110,14 @@
                         :key="bestShow.id"
                         class="flex flex-shrink-0 px-1"
                     >
-                        <!-- Wrapper pre hover efekt -->
                         <div
                             class="relative w-[250px] cursor-pointer transition-transform duration-300 hover:scale-105"
                             @click="onCardClick(bestShow)"
                         >
-                            <!-- Karta -->
                             <div
                                 class="bg-p-4 rounded-2xs flex flex-col justify-end"
                                 style="height: 35vh"
                             >
-                                <!-- Obrázok -->
                                 <div
                                     class="relative flex-1 overflow-hidden rounded-2xl bg-amber-800"
                                 >
@@ -135,7 +128,6 @@
                                         class="h-full w-full object-cover transition-transform duration-300"
                                     />
 
-                                    <!-- Overlay -->
                                     <div
                                         class="absolute inset-0 flex flex-col items-center justify-center bg-black/0 p-4 text-center text-white opacity-0 transition-all duration-300 hover:bg-black/60 hover:opacity-100"
                                     >
@@ -158,10 +150,9 @@
                     </div>
                 </div>
 
-                <!-- Šípka vpravo -->
                 <button
                     @click="scrollRight"
-                    class="z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-white/90 shadow-lg transition-all hover:scale-110 hover:bg-white disabled:cursor-not-allowed disabled:opacity-50 sm:h-12 sm:w-12"
+                    class="z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-white/90 shadow-lg transition-all hover:scale-110 hover:bg-[#D90429] hover:text-white disabled:cursor-not-allowed disabled:opacity-50 sm:h-12 sm:w-12"
                     :disabled="!canScrollRight()"
                 >
                     <svg
@@ -197,7 +188,7 @@ const props = defineProps({
 });
 
 const currentIndex = ref(0);
-const cardWidth = '250px'; // Pevná šírka kariet pre posúvanie o 1 kartu
+const cardWidth = '250px';
 
 let intervalId: number;
 
@@ -266,13 +257,11 @@ function roundRating(rating?: number | null): string {
 }
 
 function onCardClick(show: any) {
-    // Navigácia na detail filmu
     window.location.href = `/show/${show.id}`;
 }
 </script>
 
 <style scoped>
-/* Skrytie scrollbaru ale ponechanie funkčnosti */
 .overflow-x-auto::-webkit-scrollbar {
     height: 6px;
 }
@@ -290,12 +279,11 @@ function onCardClick(show: any) {
     background: rgba(0, 0, 0, 0.5);
 }
 
-/* Skrytie scrollbaru vo všetkých prehliadačoch */
 .hide-scrollbar {
-    -ms-overflow-style: none; /* IE a Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 .hide-scrollbar::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
 }
 </style>

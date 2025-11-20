@@ -1,0 +1,194 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-2"/>
+    <title>Projekt IIS</title>
+    <style type="text/css">
+    	table { border-collapse: collapse; }
+    	td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+    	dt { font-weight: bold; margin-top: 0.5em; }
+    </style>
+</head>
+<body>
+
+<h1>Kino</h1>
+
+<dl>
+	<dt>Autoři</dt>
+	<dd>Marián Šuľa
+	    <a href="mailto:xsulama00@stud.fit.vut.cz">xsulama00@stud.fit.vut.cz</a> -
+		návrh databáze, CRUD a UI pre admin rozhranie okrem rezervácie 
+	</dd>
+	<dd>Marko Poľanský 
+	    <a href="mailto:xpolan12@stud.fit.vut.cz">xpolan12@stud.fit.vut.cz</a> - 
+		návrh databáze, 
+	</dd>
+  <dd>Samuel Kundrát
+	    <a href="mailto:xkundrs00@stud.fit.vut.cz">xkundrs00@stud.fit.vut.cz</a> - 
+		návrh databáze, návrh UI, frontend hlavných podstránok
+	</dd>
+	<dt>URL aplikace</dt>
+	<dd><a href="http://www.stud.fit.vutbr.cz/~xsulama00/IIS">http://www.stud.fit.vutbr.cz/~xsulama00/IIS</a></dd>
+</dl>
+
+<h2>Uživatelé systému pro testování</h2>
+<table>
+<tr><th>e-mail</th><th>Heslo</th><th>Role</th></tr>
+<tr><td>admin@gmail.com</td><td>password</td><td>Administrátor</td></tr>
+<tr><td>cashier@gmail.com</td><td>password</td><td>Pokladník</td></tr>
+<tr><td>editor@gmail.com</td><td>password</td><td>Redaktor</td></tr>
+<tr><td>normal@gmail.com</td><td>password</td><td>Normály uživateľ</td></tr>
+</table>
+
+<!--- <p>(Diagram případů užití není nutné vkládat, pokud IS implementuje role a případy užití definované zadáním.)</p>  --->
+
+<h3>Video</h3>
+
+
+<h2>Implementace</h2>
+    <img src="/kino_use_case_.drawio.png" alt="useCase">
+    <section id="uc-vytvorit-rezervaciu-bez-registracie">
+        <h4>Vytvoriť rezerváciu bez registrácie</h4>
+        <p>ReservationController</p>
+    </section>
+
+    <section id="uc-registrovat-ucet">
+        <h4>Registrovať účet</h4>
+        <p>RegisteredUserController</p>
+    </section>
+
+    <section id="uc-dokoncit-registraciu">
+        <h4>Dokončiť registráciu účtu</h4>
+        <p>ProfileController</p>
+    </section>
+
+    <!-- Prihlásený používateľ -->
+    <section id="uc-vyhladavat-kulturne-udalosti">
+        <h4>Vyhľadávať kultúrne udalosti</h4>
+        <p>ShowController</p>
+    </section>
+
+    <section id="uc-prezerat-kulturne-udalosti">
+        <h4>Prezerať kultúrne udalosti</h4>
+        <p>ShowControllerw</p>
+    </section>
+
+    <section id="uc-prezerat-svoje-rezervacie">
+        <h4>Prezerať svoje rezervácie miest</h4>
+        <p>ReservationController</p>
+    </section>
+
+    <section id="uc-prezerat-volne-miesta">
+        <h4>Prezerať voľné miesta kultúrnej udalosti</h4>
+        <p>EventController</p>
+    </section>
+
+    <section id="uc-upravit-profil">
+        <h4>Upraviť svoj profil</h4>
+        <p>ProfileController</p>
+    </section>
+
+    <section id="uc-vytvorit-rezervaciu">
+        <h4>Vytvoriť rezerváciu</h4>
+        <p>ReservationController</p>
+    </section>
+
+    <section id="uc-spravovat-hodnotenia">
+        <h4>Spravovať svoje hodnotenia predstavení</h4>
+        <p>RatingController</p>
+    </section>
+
+    <!-- Pokladnik -->
+    <section id="uc-spravovat-rezervacie-pre-saly">
+        <h4>Spravovať rezervácie pre vybrané sály</h4>
+        <p>ReservationController</p>
+    </section>
+
+    <section id="uc-potvrdit-rezervacie">
+        <h4>Potvrdiť rezervácie</h4>
+        <p>ReservationController</p>
+    </section>
+
+    <!-- Redaktor-->
+    <section id="uc-spravovat-vsetky-saly">
+        <h4>Spravovať všetky sály</h4>
+        <p>HallController</p>
+    </section>
+
+    <section id="uc-spravovat-vsetky-predstavenia">
+        <h4>Spravovať všetky predstavenia</h4>
+        <p>ShowController</p>
+    </section>
+
+    <section id="uc-spravovat-kulturne-udalosti">
+        <h4>Spravovať všetky kultúrne udalosti</h4>
+        <p>EventController</p>
+    </section>
+
+    <!-- Admin-->
+    <section id="uc-spravovat-vsetkych-uzivatelov">
+        <h4>Spravovať všetkých používateľov</h4>
+        <p>UserController</p>
+    </section>
+
+
+<h3>Databáze</h3>
+
+<img src="./KINO_ER_DIAGRAM.jpg" alt="ERDIAGRAM">
+
+<h2>Instalace</h2>
+
+<h3>Postup Inštalácie na server (Endora)</h3>
+<ul>
+	<li>Projekt beží na Endora hosting-u</li>
+	<li>Bolo potrebné preniesť celú databázu na hosting</li>
+	<li>Export prebehol cez príkaz: <code>mysqldump -p iis > kino.sql</code></li>
+	<li>Vygenerovaný súbor kino.sql sa následne importoval do databázy na Endore (cez phpMyAdmin)</li>
+    <li>Frontend (Vue) sa musel zbuildovať do finálnych JS/CSS súborov: <code>npm run build</code></li>
+    <li>Build sa cez FileZilla nahral na Endoru</li>
+    <li>Do public_html sa umiestnili:</li>
+    <ul>
+        <li>obsah z build/ (build Vue)</li>
+        <li>index.php</li>
+        <li>.htaccess</li>
+        <li>storage</li>
+    </ul>
+    <li>Do priečinka /www sa nahrala celá Laravel aplikácia okrem node_modules a nepotrebných súborov</li>
+    <li>Bolo potrebné upraviť cestu ukladania súborov (storage path), aby zodpovedala štruktúre Endora hostingu</li>
+    <li>Skontrolovalo sa nastavenie ENV súboru:</li>
+    <ul>
+        <li><code>DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD</code></li>
+        <li><code>APP_URL</code>  na doménu Endory</li>
+        <li><code>APP_ENV=production, APP_DEBUG=false</code> na produkčný režim</li>
+    </ul>
+</ul>
+<h3>Softwarové požiadavky</h3>
+<ul>
+	<li>PHP 8.2+</li>
+	<li>Web server</li>
+	<li>Composer pre správu balíčkov</li>
+	<li>Databázový server MySQL</li>
+</ul>
+<h3>Lokálny setup</h3>
+<ul>
+    <li>Stiahnutie zip z githubu: https://github.com/saminkosaurusrex/IIS-2025-2026</li>
+    <li>Odzipovanie</li>
+    <li>Inštalácia PHP závislostí: <code>composer install</code></li>
+    <li>Inštalácia Node.js závislostí: <code>npm install</code></li>
+    <li>Vytvorenie .env suboru: <code>cp .env.example .env</code></li>
+    <li>Editácia:</li>
+    <ul>
+        <li><code>APP_URL=http://localhost:8000</code></li>
+        <li><code>DB_CONNECTION, DB_DATABASE, DB_USERNAME, DB_PASSWORD</code> podľa vlastných hodnôt</li>
+    </ul>
+    <li>Generácia <code>APP_KEY</code> pomocou: <code>php artisan key:generate</code></li>
+    <li>Vytvorenie a naplnenie databáze skusobnými dátami: <code>php artisan migrate:fresh --seed</code></li>
+    <li>Spustenie aplikácie: <code>composer run dev</code></li>
+</ul>
+<h2>Známé problémy</h2>
+<p>Pri pridaní nového druhu predstavenia sa položky v navigačnom paneli (navbar) neaktualizujú okamžite. Z dôvodu cacheovania sa zmeny prejavia až približne po 30 minútach.</p>
+
+</body>
+</html>

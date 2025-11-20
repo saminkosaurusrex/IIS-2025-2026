@@ -2,11 +2,9 @@
     <div class="app-layout flex min-h-screen flex-col bg-gray-50">
         <NavMenu />
         <div class="flex-1">
-            <!-- Filter Section -->
             <div class="bg-gray-50 px-6 py-6">
                 <div class="mx-auto max-w-7xl">
                     <div class="mb-4 flex flex-wrap gap-4">
-                        <!-- Search -->
                         <div class="relative min-w-[300px] flex-1">
                             <input
                                 v-model="searchQuery"
@@ -29,7 +27,6 @@
                             </svg>
                         </div>
 
-                        <!-- Location Filter -->
                         <select
                             v-model="selectedLocation"
                             class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:outline-none"
@@ -45,7 +42,6 @@
                         </select>
                     </div>
 
-                    <!-- Tags -->
                     <div class="flex items-center gap-3">
                         <span class="text-sm font-medium text-gray-700"
                             >Tags:</span
@@ -58,7 +54,7 @@
                                 :class="[
                                     'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
                                     selectedTags.includes(tag)
-                                        ? 'bg-gray-900 text-white'
+                                        ? 'bg-[#D90429] text-white'
                                         : 'bg-white text-gray-700 hover:bg-gray-100',
                                 ]"
                             >
@@ -69,7 +65,6 @@
                 </div>
             </div>
 
-            <!-- Shows Grid -->
             <div class="px-6 py-8">
                 <div class="mx-auto max-w-7xl">
                     <div
@@ -81,7 +76,6 @@
                             class="group cursor-pointer overflow-hidden rounded-lg bg-white shadow transition-shadow hover:shadow-lg"
                             @click="goToShow(show.id)"
                         >
-                            <!-- Image with Category Badge -->
                             <div class="relative aspect-[2/3] overflow-hidden">
                                 <img
                                     v-if="show.image"
@@ -97,7 +91,6 @@
                                 </div>
                             </div>
 
-                            <!-- Card Content -->
                             <div class="p-4">
                                 <h3
                                     class="mb-2 line-clamp-1 text-lg font-semibold text-gray-900"
@@ -105,7 +98,6 @@
                                     {{ show.name }}
                                 </h3>
 
-                                <!-- Actors/Cast -->
                                 <p
                                     v-if="
                                         show.performers &&
@@ -130,7 +122,6 @@
                         </div>
                     </div>
 
-                    <!-- No Results -->
                     <div
                         v-if="filteredShows.length === 0"
                         class="py-16 text-center"
@@ -158,7 +149,6 @@ const selectedLocation = ref('');
 const selectedCategory = ref('');
 const selectedTags = ref<string[]>([]);
 
-// Get unique locations from events
 const uniqueLocations = computed(() => {
     const locations = new Set<string>();
     props.shows?.forEach((show: any) => {
@@ -171,7 +161,6 @@ const uniqueLocations = computed(() => {
     return Array.from(locations).sort();
 });
 
-// Get unique show types
 const uniqueTypes = computed(() => {
     const types = new Set<string>();
     props.shows?.forEach((show: any) => {
@@ -182,7 +171,6 @@ const uniqueTypes = computed(() => {
     return Array.from(types).sort();
 });
 
-// Toggle tag selection
 const toggleTag = (tag: string) => {
     const index = selectedTags.value.indexOf(tag);
     if (index > -1) {
@@ -204,12 +192,10 @@ const getTags = computed(() => {
     return Array.from(tags).sort();
 });
 
-// Filter shows based on all criteria
 const filteredShows = computed(() => {
     if (!props.shows) return [];
 
     return props.shows.filter((show: any) => {
-        // Search filter
         if (
             searchQuery.value &&
             !show.name.toLowerCase().includes(searchQuery.value.toLowerCase())
@@ -217,14 +203,12 @@ const filteredShows = computed(() => {
             return false;
         }
 
-        // Location filter
         if (selectedLocation.value) {
             const hasLocation = show.events?.some(
                 (event: any) => event.hall?.name === selectedLocation.value,
             );
             if (!hasLocation) return false;
         }
-        // tags filter
         if (selectedTags.value.length > 0) {
             const showTagNames = show.tags?.map((t: any) => t.name) || [];
             const hasMatchingTag = selectedTags.value.some((selectedTag) =>
@@ -237,7 +221,6 @@ const filteredShows = computed(() => {
     });
 });
 
-// Get minimum price from events
 const getMinPrice = (show: any) => {
     if (!show.events || show.events.length === 0) return 'N/A';
 
@@ -247,7 +230,6 @@ const getMinPrice = (show: any) => {
     return `$${minPrice.toFixed(2)}`;
 };
 
-// Navigate to show detail
 const goToShow = (showId: number) => {
     window.location.href = `/show/${showId}`;
 };

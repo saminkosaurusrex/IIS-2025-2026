@@ -134,7 +134,7 @@ const handleSubmit = () => {
         <div class="p-4">
             <form @submit.prevent="handleSubmit" class="w-8/12 space-y-4">
                 <div class="space-y-2">
-                    <Label for="Event hall">Výber udalosti</Label>
+                    <Label for="Event hall">*Výber udalosti</Label>
                     <div class="space-x-2 space-y-2">
                         <Button v-for="show in props.shows" type="button"
                             :class="form.show === show.id ? 'bg-blue-600 text-white hover:bg-blue-400' : 'bg-red-400 text-white hover:text-white hover:bg-red-600'"
@@ -145,7 +145,7 @@ const handleSubmit = () => {
                     </div>
                 </div>
                 <div class="space-y-2 space-x-2">
-                    <Label for="Event hall">Výber sály</Label>
+                    <Label for="Event hall">*Výber sály</Label>
                     <div class="space-x-2">
                         <Button v-for="hall in props.halls" type="button"
                             :class="form.hall === hall.id ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:text-white'"
@@ -157,14 +157,14 @@ const handleSubmit = () => {
 
                 <div class="space-y-4">
                     <div>
-                        <Label>Dátum</Label>
+                        <Label>*Dátum</Label>
                         <Input v-model="form.date" type="date" :min="new Date().toISOString().split('T')[0]"
                             :disabled="!form.hall || !form.show" @click="selectDate()" />
                         <div class="text-sm text-red-600" v-if="form.errors.date">{{ form.errors.date }}</div>
                     </div>
                 </div>
                 <div v-if="form.date" class="space-y-2">
-                    <Label for="Event hall">Výber času</Label>
+                    <Label for="Event hall">*Výber času</Label>
                     <div v-if="selectedTimes().length > 0" class="space-x-2 ">
                         <Button v-for="event in selectedTimes()" type="button"
                             :class="form.time == event.starting_at.slice(11, 19) ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:text-white'"

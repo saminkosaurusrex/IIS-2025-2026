@@ -124,7 +124,7 @@ const isBlockedEnd = (hour: string) => {
         <div class="p-4">
             <form @submit.prevent="handleSubmit" class="w-8/12 space-y-4">
                 <div class="space-y-2">
-                    <Label for="Event hall">Výber sály pre udalosť</Label>
+                    <Label for="Event hall">*Výber sály pre udalosť</Label>
                     <div class="space-y-2 space-x-2">
                         <Button v-for="hall in props.halls" type="button"
                             :class="form.hall === hall.id ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:text-white'"
@@ -134,7 +134,7 @@ const isBlockedEnd = (hour: string) => {
                     <div class="text-sm text-red-600" v-if="form.errors.hall">{{ form.errors.hall }}</div>
                 </div>
                 <div class="space-y-2">
-                    <Label for="Event hall">Výber udalosti</Label>
+                    <Label for="Event hall">*Výber udalosti</Label>
                     <div class="space-y-2 space-x-2">
                         <Button v-for="show in props.shows" type="button"
                             :class="form.show === show.id ? 'bg-blue-600 text-white hover:bg-blue-400' : 'bg-red-400 text-white hover:text-white hover:bg-red-600'"
@@ -146,14 +146,14 @@ const isBlockedEnd = (hour: string) => {
                 </div>
                 <div class="space-y-4">
                     <div>
-                        <Label>Dátum</Label>
+                        <Label>*Dátum</Label>
                         <Input v-model="form.date" type="date" :min="new Date().toISOString().split('T')[0]"
                             :disabled="!form.hall || !form.show" />
                         <div class="text-sm text-red-600" v-if="form.errors.date">{{ form.errors.date }}</div>
                     </div>
 
                     <div>
-                        <Label>Čas začiatku</Label>
+                        <Label>*Čas začiatku</Label>
                         <select v-model="form.start_time" class="w-full p-2 border rounded" :disabled="!form.date">
                             <option value="">Výber času</option>
                             <option v-for="hour in 24" :key="hour"
@@ -167,7 +167,7 @@ const isBlockedEnd = (hour: string) => {
                     </div>
 
                     <div>
-                        <Label>Čas konca</Label>
+                        <Label>*Čas konca</Label>
                         <select v-model="form.end_time" class="w-full p-2 border rounded" :disabled="!form.start_time">
                             <option value="">Vyberte čas</option>
                             <option v-for="hour in 24" :key="hour"
@@ -179,7 +179,7 @@ const isBlockedEnd = (hour: string) => {
                         <div class="text-sm text-red-600" v-if="form.errors.end_time">{{ form.errors.end_time }}</div>
                     </div>
                     <div class="space-y-2">
-                        <Label for="Shows name">Cena lístka</Label>
+                        <Label for="Shows name">*Cena lístka</Label>
                         <Input v-model="form.price" type="number" placeholder="Cena lístka"></Input>
                         <div class="text-sm text-red-600" v-if="form.errors.price">{{ form.errors.price }}</div>
                     </div>

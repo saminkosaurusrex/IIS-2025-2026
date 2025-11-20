@@ -10,7 +10,7 @@ import BaseEditCreate from '@/components/BaseEditCreate.vue';
             changeActionName: 'Vytvoriť',
             name: 'Typy predstavení',
             changeName: 'typ predstavenia',
-            link: 'show_types/',
+            link: 'show_types',
             actionLink: 'create'
         }" 
     />

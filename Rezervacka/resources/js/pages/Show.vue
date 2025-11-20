@@ -1,7 +1,6 @@
 <template>
     <NavMenu />
     <div class="flex h-[94vh]">
-        <!-- Ľavá strana - obrázok -->
         <div class="h-full w-2/5 overflow-hidden">
             <img
                 v-if="show.image"
@@ -10,16 +9,12 @@
                 class="h-full w-full object-cover"
             />
         </div>
-
-        <!-- Pravá strana - text -->
         <div ref="scrollContainer" class="flex w-3/5 flex-col overflow-y-auto">
             <div class="px-10 py-10">
-                <!-- Názov -->
                 <h1 class="mb-4 text-5xl font-bold text-gray-900">
                     {{ show.name }}
                 </h1>
 
-                <!-- Typ + tagy -->
                 <div class="mb-4 flex flex-wrap items-center gap-2">
                     <div
                         class="rounded-full bg-amber-50 px-4 py-2 text-gray-900"
@@ -40,28 +35,33 @@
                     </div>
                 </div>
 
-                <!-- Popis -->
                 <p class="mb-8 max-w-2xl text-lg leading-relaxed text-gray-700">
                     {{ show.description }}
                 </p>
 
-                <div class="flex flex-wrap items-center gap-2 mb-6 ">
+                <div class="mb-6 flex flex-wrap items-center gap-2">
                     <b>Účinkujú:</b>
-                    <template v-for="performer in show.performers" :key="performer.id">
-                        {{performer.name}},
+                    <template
+                        v-for="performer in show.performers"
+                        :key="performer.id"
+                    >
+                        {{ performer.name }},
                     </template>
                 </div>
 
-                <div v-if="$page.props.auth.user" class="flex flex-wrap items-center gap-2 mb-6 ">
+                <div
+                    v-if="$page.props.auth.user"
+                    class="mb-6 flex flex-wrap items-center gap-2"
+                >
                     Vaše hodnotenie:
-                    <vue3-star-ratings v-model="form.rating" :disableClick="form.processing" />
+                    <vue3-star-ratings
+                        v-model="form.rating"
+                        :disableClick="form.processing"
+                    />
                 </div>
 
-
-                <!-- Separator -->
                 <div class="mb-6 border-t border-gray-300"></div>
 
-                <!-- Filter miesta -->
                 <div ref="filterSection" class="mb-6">
                     <label class="mb-2 block text-sm font-medium text-gray-700"
                         >Zvoľte miesto:</label
@@ -82,10 +82,8 @@
                     </select>
                 </div>
 
-                <!-- Separator -->
                 <div class="mb-6 border-t border-gray-300"></div>
 
-                <!-- Tabuľka s časmi -->
                 <div
                     v-if="selectedHall && groupedEvents.length > 0"
                     ref="eventsSection"
@@ -135,7 +133,6 @@
                     </table>
                 </div>
 
-                <!-- Placeholder keď nie je zvolené miesto -->
                 <div
                     v-else-if="!selectedHall"
                     class="py-8 text-center text-gray-500"
@@ -143,7 +140,6 @@
                     Prosím, zvoľte miesto pre zobrazenie dostupných termínov.
                 </div>
 
-                <!-- Placeholder keď nie sú žiadne eventy -->
                 <div v-else class="py-8 text-center text-gray-500">
                     Pre toto miesto momentálne nie sú dostupné žiadne termíny.
                 </div>
@@ -162,26 +158,26 @@ const props = defineProps<{
     user_rating: any;
 }>();
 
-
-
 const form = useForm({
     rating: props.user_rating?.rating / 2 || 0,
     show_id: props.show.id,
 });
 
-watch(() => form.rating, (newVal) => {
-    const roundedValue = Math.round(newVal * 2) / 2;
-    if (newVal !== roundedValue) {
-        form.rating = roundedValue;
-    }
-    form.post('/rating');
-});
+watch(
+    () => form.rating,
+    (newVal) => {
+        const roundedValue = Math.round(newVal * 2) / 2;
+        if (newVal !== roundedValue) {
+            form.rating = roundedValue;
+        }
+        form.post('/rating');
+    },
+);
 
 const selectedHall = ref('');
 const scrollContainer = ref<HTMLElement | null>(null);
 const eventsSection = ref<HTMLElement | null>(null);
 
-// Získanie unikátnych miest (halls) z eventov
 const uniqueHalls = computed(() => {
     if (!props.show.events || props.show.events.length === 0) return [];
 
@@ -195,16 +191,18 @@ const uniqueHalls = computed(() => {
     return Array.from(hallsMap.values());
 });
 
-// Zoskupenie eventov podľa dátumu pre zvolené miesto
 const groupedEvents = computed(() => {
     if (!selectedHall.value || !props.show.events) return [];
 
-    // Filtrovanie eventov podľa zvoleného miesta
-    const filteredEvents = props.show.events.filter(
-        (event: any) => event.hall.id === Number(selectedHall.value),
-    );
+    const now = new Date();
 
-    // Zoskupenie podľa dátumu
+    const filteredEvents = props.show.events.filter((event: any) => {
+        if (event.hall.id !== Number(selectedHall.value)) return false;
+
+        const eventDateTime = new Date(event.starting_at.replace(' ', 'T'));
+        return eventDateTime > now;
+    });
+
     const groups = new Map();
 
     filteredEvents.forEach((event: any) => {
@@ -238,7 +236,6 @@ const groupedEvents = computed(() => {
         });
     });
 
-    // Konverzia na pole a zoradenie eventov v rámci každého dňa
     const result = Array.from(groups.values());
     result.forEach((group) => {
         group.events.sort((a: any, b: any) => {
@@ -252,7 +249,6 @@ const groupedEvents = computed(() => {
     return result;
 });
 
-// Funkcia na scrollovanie k eventom po výbere miesta
 const scrollToEvents = () => {
     if (selectedHall.value && eventsSection.value && scrollContainer.value) {
         nextTick(() => {

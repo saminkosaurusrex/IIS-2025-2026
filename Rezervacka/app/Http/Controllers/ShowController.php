@@ -15,12 +15,18 @@ use Illuminate\Support\Facades\Storage;
 class ShowController extends Controller
 {
     public function show($show_name){
-        $shows = Show::with(['show_type', 'tags', 'events.hall'])
+        $shows = Show::with(['show_type', 'tags', 'events' => function ($query) {
+                $query->where('starting_at', '>', now())
+                    ->with('hall')
+                    ->orderBy('starting_at', 'asc');
+            }])
             ->whereHas('show_type', function ($query) use ($show_name) {
                 $query->where('name', $show_name);
             })
+            ->whereHas('events', function ($query) {
+                $query->where('starting_at', '>', now());
+            })
             ->get();
-
 
         return Inertia::render('ShowType',['shows' => $shows]);
     }
@@ -28,12 +34,8 @@ class ShowController extends Controller
    public function showSpec($id)
     {
         // Získať show podľa ID, vrátane typu a tagov
-        $show = Show::with(['show_type', 'tags', 'performers', 'events' => function ($query) {
-            $query->where('starting_at', '>=', now())
-                ->where('ending_at', '<=', now()->addDays(7))
-                ->with('hall');
-        }
-        ])->findOrFail($id);
+        $show = Show::with(['show_type', 'tags', 'performers', 'events.hall'])
+                    ->findOrFail($id);
 
         $user_rating = Rating::where('show_id', $id)->where("user_id",auth()->id())->first();
         // Poslať do Vue komponentu Show.vue
@@ -139,15 +141,18 @@ class ShowController extends Controller
             $path = $request->file('image')->store('images', 'public');
             $validated['image'] = Storage::url($path);
         } else {
-            $validated['image'] = $show->image;
-        }
-        if ($request->input('delete_image') == 1) {
-            if ($show->image) {
-                $path = str_replace('/storage/', '', $show->image);
-                Storage::disk('public')->delete($path);
+            if ($request->input('delete_image') == 1) {
+                if ($show->image) {
+                    $path = str_replace('/storage/', '', $show->image);
+                    Storage::disk('public')->delete($path);
+                }
+                $validated['image'] = null;
+            }else{
+
+                $validated['image'] = $show->image;
             }
-            $validated['image'] = null;
         }
+
 
         $show->update([
             'name' => $validated['name'],

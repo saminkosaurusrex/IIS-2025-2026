@@ -35,7 +35,7 @@ const props = defineProps<Props>();
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: `${props.nameProps.action} ${props.nameProps.changeName}`,
-        href: `/${props.nameProps.link}${props.tableValues?.id}/${props.nameProps.actionLink}`,
+        href: `/${props.nameProps.link}/${props.tableValues?.id}/${props.nameProps.actionLink}`,
     },
 ];
 
@@ -44,10 +44,9 @@ const form = useForm({
 });
 
 const handleSubmit = () => {
-    console.log(form);
     props.nameProps.actionLink === 'create' ?
     form.post(`/${props.nameProps.link}`) :
-    form.put(`/${props.nameProps.link}${props.tableValues?.id}`);
+    form.put(`/${props.nameProps.link}/${props.tableValues?.id}`);
 };
 
 </script>
@@ -60,7 +59,7 @@ const handleSubmit = () => {
         <div class="p-4">
             <form @submit.prevent="handleSubmit" class="w-8/12 space-y-4">
                 <div class="space-y-2">
-                    <Label>{{ props.nameProps.name }}</Label>
+                    <Label>*{{ props.nameProps.name }}</Label>
                     <Input v-model="form.name" type="text" :placeholder="props.nameProps.name"></Input>
                     <div class="text-sm text-red-600" v-if="form.errors.name">{{ form.errors.name }}</div>
                 </div>
