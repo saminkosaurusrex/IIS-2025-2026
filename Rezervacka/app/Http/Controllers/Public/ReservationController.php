@@ -45,16 +45,12 @@ class ReservationController extends Controller
 
         if (strlen($error_seats) > 0) {
 
-            redirect("/udalost/".$event->id)
+            return redirect("/udalost/".$event->id)
                 ->withErrors([
                     'selectedSeats' => "Vybraté miesta mimo rozloženia sály: ".$error_seats,
                 ])
                 ->withInput();
 
-
-            return back()->withErrors([
-                'selectedSeats' => "Vybraté miesta mimo rozloženia sály: ".$error_seats,
-            ])->withInput();
         }
 
         if (Carbon::parse($event->starting_at)->isPast()) {
