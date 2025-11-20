@@ -19,7 +19,7 @@
 	<dt>Autoři</dt>
 	<dd>Marián Šuľa
 	    <a href="mailto:xsulama00@stud.fit.vut.cz">xsulama00@stud.fit.vut.cz</a> -
-		návrh databáze, 
+		návrh databáze, CRUD a UI pre admin rozhranie okrem rezervácie 
 	</dd>
 	<dd>Marko Poľanský 
 	    <a href="mailto:xpolan12@stud.fit.vut.cz">xpolan12@stud.fit.vut.cz</a> - 
@@ -140,7 +140,30 @@
 
 <h2>Instalace</h2>
 
-<h3>Postup Inštalácie na server</h3>
+<h3>Postup Inštalácie na server (Endora)</h3>
+<ul>
+	<li>Projekt beží na Endora hosting-u</li>
+	<li>Bolo potrebné preniesť celú databázu na hosting</li>
+	<li>Export prebehol cez príkaz: <code>mysqldump -p iis > kino.sql</code></li>
+	<li>Vygenerovaný súbor kino.sql sa následne importoval do databázy na Endore (cez phpMyAdmin)</li>
+    <li>Frontend (Vue) sa musel zbuildovať do finálnych JS/CSS súborov: <code>npm run build</code></li>
+    <li>Build sa cez FileZilla nahral na Endoru</li>
+    <li>Do public_html sa umiestnili:</li>
+    <ul>
+        <li>obsah z build/ (build Vue)</li>
+        <li>index.php</li>
+        <li>.htaccess</li>
+        <li>storage</li>
+    </ul>
+    <li>Do priečinka /www sa nahrala celá Laravel aplikácia okrem node_modules a nepotrebných súborov</li>
+    <li>Bolo potrebné upraviť cestu ukladania súborov (storage path), aby zodpovedala štruktúre Endora hostingu</li>
+    <li>Skontrolovalo sa nastavenie ENV súboru:</li>
+    <ul>
+        <li><code>DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD</code></li>
+        <li><code>APP_URL</code>  na doménu Endory</li>
+        <li><code>APP_ENV=production, APP_DEBUG=false</code> na produkčný režim</li>
+    </ul>
+</ul>
 <h3>Softwarové požiadavky</h3>
 <ul>
 	<li>PHP 8.2+</li>
@@ -148,8 +171,22 @@
 	<li>Composer pre správu balíčkov</li>
 	<li>Databázový server MySQL</li>
 </ul>
-<h3>Setup databáze</h3>
-
+<h3>Lokálny setup</h3>
+<ul>
+    <li>Stiahnutie zip z githubu: https://github.com/saminkosaurusrex/IIS-2025-2026</li>
+    <li>Odzipovanie</li>
+    <li>Inštalácia PHP závislostí: <code>composer install</code></li>
+    <li>Inštalácia Node.js závislostí: <code>npm install</code></li>
+    <li>Vytvorenie .env suboru: <code>cp .env.example .env</code></li>
+    <li>Editácia:</li>
+    <ul>
+        <li><code>APP_URL=http://localhost:8000</code></li>
+        <li><code>DB_CONNECTION, DB_DATABASE, DB_USERNAME, DB_PASSWORD</code> podľa vlastných hodnôt</li>
+    </ul>
+    <li>Generácia <code>APP_KEY</code> pomocou: <code>php artisan key:generate</code></li>
+    <li>Vytvorenie a naplnenie databáze skusobnými dátami: <code>php artisan migrate:fresh --seed</code></li>
+    <li>Spustenie aplikácie: <code>composer run dev</code></li>
+</ul>
 <h2>Známé problémy</h2>
 <p>Pri pridaní nového druhu predstavenia sa položky v navigačnom paneli (navbar) neaktualizujú okamžite. Z dôvodu cacheovania sa zmeny prejavia až približne po 30 minútach.</p>
 
