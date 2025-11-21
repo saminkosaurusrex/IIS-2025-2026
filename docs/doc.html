@@ -137,7 +137,7 @@
 
 <h3>Postup Inštalácie na server (Endora)</h3>
 <ul>
-	<li>Projekt beží na Endora hosting-u</li>
+	<li>Projekt beží na Endora hosting-u spolu s mysql databázou</li>
 	<li>Bolo potrebné preniesť celú databázu na hosting</li>
 	<li>Export prebehol cez príkaz: <code>mysqldump -p iis > kino.sql</code></li>
 	<li>Vygenerovaný súbor kino.sql sa následne importoval do databázy na Endore (cez phpMyAdmin)</li>
@@ -160,6 +160,9 @@
     </ul>
 </ul>
 <h3>Softwarové požiadavky</h3>
+<p>Pri vývoji bol použitý framework Laravel spolu s vue starter kit:  <a target="_blank" href="https://laravel.com/docs/12.x/starter-kits">
+    bližšie informácie z dokumentácií od Laravelu
+</a></p>
 <ul>
 	<li>PHP 8.2+</li>
 	<li>Web server</li>
