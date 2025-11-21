@@ -13,7 +13,8 @@ class EventController extends Controller
     public function show($id){
 
         $event = Event::with(['hall', 'show.tags','reservations' => function ($query) {
-            $query->select('id', 'event_id', 'row', 'user_id','column','reserved_at','confirmed_at','paid_at');
+            $query->select('id', 'event_id', 'row', 'user_id','column','reserved_at','confirmed_at','paid_at')
+                ->where("canceled_at",null);
         }])->where("id", $id)
             ->FirstOrFail();
 
