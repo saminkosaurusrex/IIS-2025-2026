@@ -48,13 +48,17 @@ class   ReservationController extends Controller
         $user = auth()->user();
 
         $reservationsQuery = Reservation::with(['user', 'event.show', 'event.hall.managed_by_users'])
+            ->join('events', 'reservations.event_id', '=', 'events.id')
             ->orderByRaw("
         CASE
-            WHEN canceled_at IS NULL AND confirmed_at IS NULL THEN 1
+            WHEN canceled_at IS NOT NULL THEN 4
+            WHEN paid_at IS NOT NULL AND canceled_at IS NULL THEN 3
             WHEN confirmed_at IS NOT NULL AND canceled_at IS NULL THEN 2
-            WHEN canceled_at IS NOT NULL THEN 3
+            WHEN canceled_at IS NULL AND confirmed_at IS NULL THEN 1
+
         END
-    ")->orderBy('reserved_at');
+    ")  ->orderBy('events.starting_at')
+         ->select('reservations.*');
 
         if($selectedRow){
             $reservationsQuery->where("row",$selectedRow);
